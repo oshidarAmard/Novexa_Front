@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دسترسی‌ها — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="permissions">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مدیریت دسترسی‌ها</h1>
+      <p>کنترل دقیق دسترسی هر نقش به ماژول‌ها و عملیات</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="copy" data-size="18"></i> کپی از نقش دیگر</button>
+      <button class="btn btn-primary" id="save"><i data-icon="save" data-size="18"></i> ذخیره تغییرات</button>
+    </div>
+  </div>
+
+  <div class="card"><div class="card__body" style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+    <span class="text-sm text-muted">نقش انتخاب‌شده:</span>
+    <div class="combo" style="min-width:240px;">
+      <button class="combo__trigger"><span class="combo__value">مدیر سیستم</span><i data-icon="chevron-down" data-size="16" class="chev"></i></button>
+      <div class="combo__panel"><div class="combo__search"><input placeholder="جستجو..."></div><div class="combo__list">
+        <div class="combo__opt is-selected"><span>مدیر سیستم</span><i data-icon="check" data-size="16" class="check"></i></div>
+        <div class="combo__opt"><span>مدیر فروش</span><i data-icon="check" data-size="16" class="check"></i></div>
+        <div class="combo__opt"><span>کارشناس انبار</span><i data-icon="check" data-size="16" class="check"></i></div>
+        <div class="combo__opt"><span>حسابدار</span><i data-icon="check" data-size="16" class="check"></i></div>
+      </div></div>
+    </div>
+    <div class="chip"><i data-icon="users" data-size="14"></i> ۳ کاربر فعال</div>
+    <div style="flex:1"></div>
+    <button class="btn btn-text btn-sm">انتخاب همه</button>
+    <button class="btn btn-text btn-sm">پاک کردن همه</button>
+  </div></div>
+
+  <div id="permGroups" style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;"></div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.Icon)return;
+    const groups=[
+      {name:'داشبورد و گزارش',icon:'dashboard',perms:[['مشاهده داشبورد',true],['مشاهده گزارش‌های مالی',true],['خروجی گزارش',true],['ایجاد گزارش سفارشی',true]]},
+      {name:'کاتالوگ و محصولات',icon:'box',perms:[['مشاهده محصولات',true],['ایجاد/ویرایش محصول',true],['حذف محصول',true],['مدیریت قیمت‌گذاری',true],['مدیریت دسته‌بندی',true]]},
+      {name:'انبار',icon:'warehouse',perms:[['مشاهده موجودی',true],['ثبت تراکنش انبار',true],['انتقال کالا',true],['تعدیل موجودی',true],['مدیریت انبارها',true]]},
+      {name:'خرید',icon:'cart',perms:[['مشاهده سفارش خرید',true],['ایجاد سفارش خرید',true],['تأیید سفارش',true],['ثبت رسید کالا',true],['مدیریت تأمین‌کنندگان',true]]},
+      {name:'فروش',icon:'shopping',perms:[['مشاهده فروش',true],['صدور فاکتور',true],['ثبت مرجوعی',true],['تأیید مرجوعی',true],['مدیریت مشتریان',true]]},
+      {name:'مالی و حسابداری',icon:'calculator',perms:[['مشاهده پرداخت‌ها',true],['ثبت پرداخت',true],['تأیید چک',true],['صدور سند حسابداری',true],['بستن دوره مالی',false]]}
+    ];
+    document.getElementById('permGroups').innerHTML=groups.map(g=>`
+      <div class="card">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon">${Icon(g.icon,18)}</span> ${g.name}</div></div>
+        <div class="card__body flush">
+          ${g.perms.map(p=>`
+            <label class="flex items-center justify-between" style="padding:10px 0;border-bottom:1px solid var(--border);">
+              <span style="font-size:14px;">${p[0]}</span>
+              <label class="switch"><input type="checkbox" ${p[1]?'checked':''}><span class="switch__track"></span></label>
+            </label>`).join('')}
+        </div>
+      </div>`).join('');
+    renderIcons(document.getElementById('permGroups'));
+  }
+  if(window.Icon)build();else window.addEventListener('novexa:core-ready',build);
+  document.getElementById('save').addEventListener('click',()=>UI.toast({type:'success',title:'ذخیره شد',message:'دسترسی‌های نقش به‌روزرسانی شد.'}));
+</script>
+</body>
+</html>

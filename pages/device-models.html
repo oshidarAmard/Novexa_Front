@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مدل‌های دستگاه — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="device-models">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مدل‌های دستگاه</h1>
+      <p>ثبت مدل‌های دستگاه برای پشتیبانی، گارانتی و سریال‌های مرتبط</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> مدل جدید</button>
+    </div>
+  </div>
+  <div id="tbl"></div>
+  <div class="modal-backdrop" id="m">
+    <div class="modal">
+      <div class="modal__header"><div class="modal__title"><i data-icon="cpu" data-size="20"></i> مدل دستگاه جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="field"><label class="field-label">نام مدل <span class="req">*</span></label><input class="input" placeholder="مثال: Galaxy S24 Ultra"></div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">برند دستگاه</label><select class="select"><option>iPhone</option><option>Galaxy</option><option>Redmi</option></select></div>
+          <div class="field"><label class="field-label">کد مدل</label><input class="input" placeholder="SM-S928B"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">سال تولید</label><input class="input" value="۱۴۰۳"></div>
+          <div class="field"><label class="field-label">مدت گارانتی</label><select class="select"><option>۱ سال</option><option>۲ سال</option><option>۶ ماه</option></select></div>
+        </div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'مدل دستگاه ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.UI)return;
+    const el=document.getElementById('tbl'); el.className='table-card';
+    const data=NOVEXA.DEVICE_MODELS.map((m,i)=>({id:i+1,name:m,brand:NOVEXA.pick(NOVEXA.DEVICE_BRANDS),code:'SM-'+NOVEXA.toFa(100+i),year:'۱۴۰۳',warranty:NOVEXA.pick(['۱ سال','۲ سال']),units:Math.floor(5+Math.random()*400)}));
+    UI.Table.create(el,{
+      data,pageSize:10,searchPlaceholder:'جستجوی مدل...',createText:'مدل جدید',createHref:'#',
+      columns:[
+        {key:'name',label:'مدل دستگاه',type:'custom',render:(v,r)=>`<div style="display:flex;align-items:center;gap:12px;"><span class="avatar avatar-sm" style="background:var(--info-50);color:var(--info)"><i data-icon="cpu" data-size="16"></i></span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code}</div></div></div>`},
+        {key:'brand',label:'برند',width:'140px'},
+        {key:'year',label:'سال تولید',width:'120px'},
+        {key:'warranty',label:'گارانتی',width:'120px'},
+        {key:'units',label:'تعداد موجودی',type:'num',width:'140px'},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+</script>
+</body>
+</html>

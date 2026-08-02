@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>سفارشات خرید — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="purchase-orders">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>سفارشات خرید</h1>
+      <p>مدیریت سفارش‌های خرید از تأمین‌کنندگان</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> سفارش خرید جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="cart"></i></div><div><div class="stat__label">کل سفارشات</div><div class="stat__value">۲۸</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">در انتظار</div><div class="stat__value">۸</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="truck"></i></div><div><div class="stat__label">در حال ارسال</div><div class="stat__value">۶</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">تحویل‌شده</div><div class="stat__value">۱۲</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="dollar"></i></div><div><div class="stat__label">ارزش کل</div><div class="stat__value">۱٫۸م‌ت</div></div></div>
+  </div>
+
+  <div class="card"><div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+    <span class="text-sm text-muted">وضعیت:</span>
+    <button class="pill is-active">همه (۲۸)</button>
+    <button class="pill">پیش‌نویس (۲)</button>
+    <button class="pill">در انتظار (۸)</button>
+    <button class="pill">تأیید شده (۴)</button>
+    <button class="pill">در حال ارسال (۶)</button>
+    <button class="pill">تحویل شده (۱۲)</button>
+  </div></div>
+
+  <div class="table-card" data-table='{"dataSource":"purchaseOrders","pageSize":10,"searchPlaceholder":"جستجوی سفارش خرید...","filters":true,"columns":[
+    {"key":"id","label":"شماره سفارش","type":"id","width":"120px"},
+    {"key":"supplier","label":"تأمین‌کننده","type":"custom","render":(v,r)=>`<div style="display:flex;align-items:center;gap:8px;"><span class="avatar avatar-sm">${NOVEXA.initials(v)}</span><div><div class="cell-strong truncate" style="max-width:200px;">${v}</div></div></div>`},
+    {"key":"warehouse","label":"انبار مقصد","width":"160px"},
+    {"key":"items","label":"اقلام","type":"num","width":"80px"},
+    {"key":"total","label":"مبلغ کل","type":"money","width":"170px","sortable":true},
+    {"key":"statusLabel","label":"وضعیت","type":"badge","width":"140px","badges":{"پیش‌نویس":{"label":"پیش‌نویس","cls":"neutral"},"در انتظار تأیید":{"label":"در انتظار","cls":"warning"},"تأیید شده":{"label":"تأیید شده","cls":"info"},"در حال ارسال":{"label":"ارسال","cls":"info"},"تحویل شده":{"label":"تحویل شده","cls":"success"},"لغو شده":{"label":"لغو","cls":"danger"}}},
+    {"key":"date","label":"تاریخ سفارش","type":"date","width":"130px"},
+    {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"]}
+  ]}'></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--xl">
+      <div class="modal__header"><div class="modal__title"><i data-icon="cart" data-size="20"></i> سفارش خرید جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">تأمین‌کننده <span class="req">*</span></label>
+            <div class="combo"><button class="combo__trigger"><span class="combo__value placeholder">انتخاب کنید...</span><i data-icon="chevron-down" data-size="16" class="chev"></i></button>
+            <div class="combo__panel"><div class="combo__search"><input placeholder="جستجو..."></div><div class="combo__list">
+              <div class="combo__opt"><span>شرکت گسترش آریا صنعت</span><i data-icon="check" data-size="16" class="check"></i></div>
+              <div class="combo__opt"><span>گروه پارس پیشرو</span><i data-icon="check" data-size="16" class="check"></i></div>
+              <div class="combo__opt"><span>شرکت دلتا صنعت</span><i data-icon="check" data-size="16" class="check"></i></div>
+            </div></div></div>
+          </div>
+          <div class="field"><label class="field-label">انبار مقصد</label><select class="select"><option>انبار مرکزی تهران</option><option>انبار پردیس</option></select></div>
+          <div class="field"><label class="field-label">تاریخ تحویل</label><div class="input-group"><span class="input-icon" data-icon="calendar"></span><input class="input" placeholder="۱۴۰۳/۰۷/۲۰"></div></div>
+        </div>
+        <h4 class="mt-6 mb-4">اقلام سفارش</h4>
+        <div class="table-card"><div class="table-wrap"><table class="data-table">
+          <thead><tr><th>محصول</th><th>واحد</th><th>تعداد</th><th>قیمت واحد</th><th>تخفیف</th><th>مبلغ</th><th></th></tr></thead>
+          <tbody id="poItems">
+            <tr><td><div class="cell-strong">گوشی سامسونگ Galaxy S24</div></td><td>عدد</td><td><input class="input input-sm" style="width:70px;" value="۱۰۰"></td><td class="num">۱۸٫۵ م‌ت</td><td><input class="input input-sm" style="width:60px;" value="۵٪"></td><td class="cell-money">۱٫۷۵۷ م‌ت</td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+          </tbody>
+        </table></div></div>
+        <button class="btn btn-text mt-4"><i data-icon="plus" data-size="16"></i> افزودن کالا</button>
+        <div class="divider"></div>
+        <div style="display:flex;justify-content:flex-end;"><div style="width:280px;display:flex;flex-direction:column;gap:8px;">
+          <div class="flex justify-between"><span class="text-muted">جمع کل:</span><b>۱٫۷۵۷ م‌ت</b></div>
+          <div class="flex justify-between"><span class="text-muted">مالیات (۹٪):</span><b>۱۵۸ م‌ت</b></div>
+          <div class="flex justify-between"><span class="text-muted">هزینه ارسال:</span><b>۲ م‌ت</b></div>
+          <div class="divider"></div>
+          <div class="flex justify-between" style="font-size:18px;"><span class="fw-700">قابل پرداخت:</span><b class="text-primary">۱٫۹۱۷ م‌ت</b></div>
+        </div></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-outline" data-modal-close>ذخیره پیش‌نویس</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ثبت شد',message:'سفارش خرید ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت سفارش</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

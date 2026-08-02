@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دسته‌بندی‌ها — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="categories">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>دسته‌بندی محصولات</h1>
+      <p>ساختار درختی دسته‌بندی کاتالوگ — ۹ دسته اصلی و فرعی</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="grid" data-size="18"></i> <span class="hide-mobile">نمای شبکه‌ای</span></button>
+      <button class="btn btn-outline"><i data-icon="list" data-size="18"></i> <span class="hide-mobile">نمای درختی</span></button>
+      <button class="btn btn-primary" data-modal-open="catModal"><i data-icon="plus" data-size="18"></i> دسته جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="folder"></i></div><div><div class="stat__label">کل دسته‌ها</div><div class="stat__value">۹</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="tag"></i></div><div><div class="stat__label">دسته اصلی</div><div class="stat__value">۶</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="layers"></i></div><div><div class="stat__label">زیردسته</div><div class="stat__value">۳</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="box"></i></div><div><div class="stat__label">کل محصولات</div><div class="stat__value">۸۵۴</div></div></div>
+  </div>
+
+  <div id="catTable"></div>
+
+  <!-- Create modal -->
+  <div class="modal-backdrop" id="catModal">
+    <div class="modal">
+      <div class="modal__header"><div class="modal__title"><i data-icon="folder" data-size="20"></i> ایجاد دسته‌بندی</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="field"><label class="field-label">نام دسته <span class="req">*</span></label><input class="input" placeholder="مثال: لوازم جانبی موبایل"></div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">دسته والد</label><select class="select"><option>— اصلی —</option><option>کالای دیجیتال</option><option>لوازم خانگی</option></select></div>
+          <div class="field"><label class="field-label">نشانک (slug)</label><input class="input" placeholder="auto-generated" value="accessories"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">آیکون</label><select class="select"><option>📁 پوشه</option><option>📦 جعبه</option><option>🏷️ برچسب</option></select></div>
+          <div class="field"><label class="field-label">رنگ</label><input class="input" type="color" value="#2563EB" style="height:42px;"></div>
+        </div>
+        <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea" placeholder="توضیح دسته..."></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ایجاد شد',message:'دسته‌بندی جدید ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد دسته</button></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function buildCatTable(){
+    if (!window.NOVEXA || !window.UI) return;
+    const el = document.getElementById('catTable');
+    el.className = 'table-card';
+    const data = NOVEXA.CATEGORIES.map(c => ({
+      ...c,
+      parent: c.parent ? NOVEXA.CATEGORIES.find(p=>p.id===c.parent)?.name : null
+    }));
+    UI.Table.create(el, {
+      data,
+      pageSize: 50,
+      createBtn: false,
+      filters: false,
+      selectable: false,
+      searchPlaceholder: 'جستجوی دسته...',
+      columns: [
+        { key:'name', label:'نام دسته', type:'custom', render:(v,r)=>`<div style="display:flex;align-items:center;gap:12px;"><span class="avatar avatar-sm" style="background:${r.color}20;color:${r.color}">${Icon(r.icon,16)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.slug}</div></div></div>` },
+        { key:'parent', label:'دسته والد', type:'custom', render:(v)=> v ? `<span class="badge badge-neutral no-dot">${v}</span>` : `<span class="text-muted">اصلی</span>` },
+        { key:'count', label:'تعداد محصول', type:'num', width:'140px' },
+        { key:'color', label:'رنگ', type:'custom', width:'100px', render:(v)=>`<span style="display:inline-flex;align-items:center;gap:6px;"><span style="width:14px;height:14px;border-radius:4px;background:${v}"></span></span>` },
+        { key:'actions', label:'', type:'actions', width:'130px', actions:['view','edit','delete'] }
+      ]
+    });
+  }
+  if (window.NOVEXA && window.UI) buildCatTable();
+  else window.addEventListener('novexa:core-ready', () => setTimeout(buildCatTable, 100));
+</script>
+</body>
+</html>

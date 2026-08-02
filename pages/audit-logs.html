@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لاگ‌های ممیزی — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="audit-logs">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>لاگ‌های ممیزی سیستم</h1>
+      <p>تاریخچه کامل فعالیت‌های کاربران — قابل پیگیری برای امنیت</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-outline"><i data-icon="filter" data-size="18"></i> <span class="hide-mobile">فیلتر</span></button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="activity"></i></div><div><div class="stat__label">رویدادهای امروز</div><div class="stat__value">۴۲۰</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="edit"></i></div><div><div class="stat__label">تغییرات داده</div><div class="stat__value">۸۲</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="alert"></i></div><div><div class="stat__label">تلاش ناموفق</div><div class="stat__value">۳</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="trash"></i></div><div><div class="stat__label">عملیات حساس</div><div class="stat__value">۵</div></div></div>
+  </div>
+
+  <div class="card"><div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+    <span class="text-sm text-muted">نوع:</span>
+    <button class="pill is-active">همه</button>
+    <button class="pill">ورود</button>
+    <button class="pill">ایجاد</button>
+    <button class="pill">ویرایش</button>
+    <button class="pill">حذف</button>
+    <button class="pill">دسترسی</button>
+    <div style="flex:1"></div>
+    <span class="text-sm text-muted">بازه تاریخ:</span>
+    <input class="input input-sm" style="width:200px;" value="۱۴۰۳/۰۷/۰۵ - ۱۴۰۳/۰۷/۱۲">
+  </div></div>
+
+  <div class="table-card" data-table='{"dataSource":"audit","pageSize":15,"searchPlaceholder":"جستجوی کاربر یا ماژول...","filters":true,"createBtn":false,"columns":[
+    {"key":"id","label":"شناسه","type":"num","width":"90px"},
+    {"key":"user","label":"کاربر","type":"user"},
+    {"key":"action","label":"عملیات"},
+    {"key":"module","label":"ماژول","width":"120px"},
+    {"key":"category","label":"نوع","type":"badge","width":"120px","badges":{"login":{"label":"ورود","cls":"success"},"create":{"label":"ایجاد","cls":"info"},"edit":{"label":"ویرایش","cls":"warning"},"delete":{"label":"حذف","cls":"danger"},"permission":{"label":"دسترسی","cls":"warning"},"export":{"label":"خروجی","cls":"info"},"logout":{"label":"خروج","cls":"neutral"}}},
+    {"key":"ip","label":"آدرس IP","width":"140px"},
+    {"key":"date","label":"تاریخ و ساعت","type":"date","width":"170px"}
+  ]}'></div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

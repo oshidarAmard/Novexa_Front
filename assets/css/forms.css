@@ -1,0 +1,254 @@
+/* ============================================================
+   NOVEXA ERP — FORMS (forms.css)
+   Inputs • Selects • Checkbox • Switch • Stepper • Validation
+   ============================================================ */
+
+/* ---------- 1. Field wrapper ---------- */
+.field{ display:flex; flex-direction:column; gap:var(--space-2); margin-bottom:var(--space-4); }
+.field:last-child{ margin-bottom:0; }
+.field-row{ display:grid; grid-template-columns:repeat(2,1fr); gap:var(--space-4); }
+@media (max-width:768px){ .field-row{ grid-template-columns:1fr; } }
+
+.field-label{
+  font-size:var(--fs-sm);
+  font-weight:var(--fw-medium);
+  color:var(--text);
+  display:flex; align-items:center; gap:var(--space-1);
+}
+.field-label .req{ color:var(--danger); }
+.field-label .optional{ font-size:var(--fs-xs); color:var(--text-tertiary); font-weight:400; }
+.field-help{ font-size:var(--fs-xs); color:var(--text-tertiary); }
+.field-error{ font-size:var(--fs-xs); color:var(--danger); display:flex; align-items:center; gap:4px; }
+.field-error svg{ width:14px;height:14px; }
+.field-success{ font-size:var(--fs-xs); color:#16A34A; display:flex; align-items:center; gap:4px; }
+
+/* ---------- 2. Input base ---------- */
+.input,.select,.textarea{
+  width:100%;
+  height:42px;
+  padding:0 var(--space-3);
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-md);
+  font-size:var(--fs-base);
+  color:var(--text);
+  transition:all var(--t);
+  outline:none;
+}
+.input::placeholder,.textarea::placeholder{ color:var(--text-tertiary); }
+.input:hover,.select:hover,.textarea:hover{ border-color:var(--text-tertiary); }
+.input:focus,.select:focus,.textarea:focus{
+  border-color:var(--color-primary);
+  box-shadow:0 0 0 3px var(--color-primary-100);
+}
+.input:disabled,.select:disabled,.textarea:disabled{ background:var(--surface-2); color:var(--text-tertiary); cursor:not-allowed; }
+.input.is-error{ border-color:var(--danger); }
+.input.is-error:focus{ box-shadow:0 0 0 3px var(--danger-100); }
+.input.is-success{ border-color:var(--success); }
+
+.textarea{ height:auto; min-height:96px; padding:var(--space-3); resize:vertical; line-height:1.6; }
+
+.input-lg{ height:50px; font-size:var(--fs-md); }
+.input-sm{ height:34px; font-size:var(--fs-sm); }
+
+/* ---------- 3. Input groups ---------- */
+.input-group{ position:relative; display:flex; align-items:center; }
+.input-group .input{ padding-inline-start:40px; }
+.input-group .input-icon{
+  position:absolute; inset-inline-start:var(--space-3);
+  width:18px; height:18px; color:var(--text-tertiary);
+  pointer-events:none;
+}
+.input-group .input-affix{
+  position:absolute; inset-inline-end:var(--space-2);
+  display:flex; gap:var(--space-1);
+}
+.input-group.has-start .input{ padding-inline-start:40px; }
+.input-group.has-end .input{ padding-inline-end:64px; }
+
+.input-prefix,.input-suffix{
+  display:inline-flex; align-items:center;
+  padding:0 var(--space-3);
+  background:var(--surface-2);
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-md);
+  color:var(--text-secondary);
+  font-size:var(--fs-sm);
+  height:42px;
+}
+.input-affixed{ display:flex; align-items:stretch; }
+.input-affixed .input{ border-radius:0; }
+.input-affixed .input-prefix{ border-radius:0 var(--radius-md) var(--radius-md) 0; border-inline-end:none; }
+.input-affixed .input-suffix{ border-radius:var(--radius-md) 0 0 var(--radius-md); border-inline-start:none; }
+.input-affixed .input:first-child{ border-radius:var(--radius-md) 0 0 var(--radius-md); }
+.input-affixed .input:last-child{ border-radius:0 var(--radius-md) var(--radius-md) 0; }
+
+/* ---------- 4. Select ---------- */
+.select{
+  appearance:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'><path d='M6 9l6 6 6-6'/></svg>");
+  background-repeat:no-repeat;
+  background-position:left var(--space-3) center;
+  background-size:16px;
+  padding-inline-end:36px;
+  cursor:pointer;
+}
+
+/* Searchable select (button trigger) */
+.combo{ position:relative; }
+.combo__trigger{
+  width:100%; height:42px;
+  display:flex; align-items:center; gap:var(--space-2);
+  background:var(--surface);
+  border:1px solid var(--border-strong);
+  border-radius:var(--radius-md);
+  padding:0 var(--space-3);
+  font-size:var(--fs-base);
+  color:var(--text);
+  cursor:pointer;
+  transition:all var(--t);
+  text-align:start;
+}
+.combo__trigger:hover{ border-color:var(--text-tertiary); }
+.combo.is-open .combo__trigger{ border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-primary-100); }
+.combo__trigger .placeholder{ color:var(--text-tertiary); }
+.combo__trigger .chev{ margin-inline-start:auto; width:16px;height:16px; color:var(--text-tertiary); }
+.combo__panel{
+  position:absolute; inset-block-start:calc(100% + 4px); inset-inline:0;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); box-shadow:var(--shadow-lg);
+  z-index:var(--z-dropdown);
+  max-height:280px; display:flex; flex-direction:column;
+  opacity:0; visibility:hidden; transform:translateY(-4px);
+  transition:all var(--t-fast);
+}
+.combo.is-open .combo__panel{ opacity:1; visibility:visible; transform:none; }
+.combo__search{ padding:var(--space-2); border-bottom:1px solid var(--border); }
+.combo__search input{
+  width:100%; height:34px;
+  background:var(--surface-2); border:1px solid transparent; border-radius:var(--radius);
+  padding:0 var(--space-3) 0 var(--space-2); outline:none; font-size:var(--fs-sm);
+}
+.combo__list{ overflow-y:auto; padding:var(--space-1); }
+.combo__opt{
+  display:flex; align-items:center; gap:var(--space-2);
+  padding:var(--space-2) var(--space-3);
+  border-radius:var(--radius);
+  font-size:var(--fs-sm);
+  cursor:pointer;
+  transition:background var(--t-fast);
+}
+.combo__opt:hover,.combo__opt.is-active{ background:var(--surface-2); }
+.combo__opt.is-selected{ color:var(--color-primary); font-weight:600; }
+.combo__opt .check{ margin-inline-start:auto; width:16px;height:16px; color:var(--color-primary); visibility:hidden; }
+.combo__opt.is-selected .check{ visibility:visible; }
+
+/* Multi-select chips */
+.multiselect{ display:flex; flex-wrap:wrap; gap:var(--space-2); padding:var(--space-2); min-height:42px; border:1px solid var(--border-strong); border-radius:var(--radius-md); background:var(--surface); cursor:text; transition:all var(--t); }
+.multiselect:focus-within{ border-color:var(--color-primary); box-shadow:0 0 0 3px var(--color-primary-100); }
+.multiselect .chip{ background:var(--color-primary-50); color:var(--color-primary); border-color:transparent; }
+.multiselect input{ flex:1; min-width:80px; border:none; outline:none; background:none; font-size:var(--fs-sm); }
+
+/* ---------- 5. Checkbox & Radio ---------- */
+.checkbox,.radio{
+  display:inline-flex; align-items:center; gap:var(--space-2);
+  font-size:var(--fs-sm); cursor:pointer; user-select:none;
+}
+.radio input{ appearance:none; width:18px; height:18px; border:1.5px solid var(--border-strong); border-radius:50%; cursor:pointer; display:inline-grid; place-items:center; transition:all var(--t-fast); background:var(--surface); }
+.radio input:checked{ border-color:var(--color-primary); }
+.radio input:checked::after{ content:""; width:9px; height:9px; border-radius:50%; background:var(--color-primary); }
+
+.checkbox input[type="checkbox"]{ composes:chk; }
+
+/* ---------- 6. Switch ---------- */
+.switch{ position:relative; display:inline-flex; align-items:center; gap:var(--space-2); cursor:pointer; user-select:none; }
+.switch input{ position:absolute; opacity:0; }
+.switch__track{
+  width:42px; height:24px;
+  background:var(--surface-3);
+  border-radius:var(--radius-full);
+  position:relative;
+  transition:background var(--t);
+}
+.switch__track::after{
+  content:""; position:absolute;
+  top:3px; inset-inline-start:3px;
+  width:18px; height:18px; border-radius:50%;
+  background:#fff;
+  box-shadow:var(--shadow-sm);
+  transition:transform var(--t);
+}
+.switch input:checked + .switch__track{ background:var(--color-primary); }
+.switch input:checked + .switch__track::after{ transform:translateX(-18px); }
+
+/* ---------- 7. File upload ---------- */
+.upload{
+  border:1.5px dashed var(--border-strong);
+  border-radius:var(--radius-md);
+  padding:var(--space-6);
+  text-align:center;
+  background:var(--surface-2);
+  transition:all var(--t);
+  cursor:pointer;
+  display:flex; flex-direction:column; align-items:center; gap:var(--space-2);
+}
+.upload:hover{ border-color:var(--color-primary); background:var(--color-primary-50); }
+.upload.drag{ border-color:var(--color-primary); background:var(--color-primary-50); }
+.upload__icon{ width:44px;height:44px; border-radius:var(--radius); background:var(--surface); color:var(--color-primary); display:grid; place-items:center; box-shadow:var(--shadow-xs); }
+.upload__icon svg{ width:24px;height:24px; }
+.upload__title{ font-weight:600; font-size:var(--fs-sm); color:var(--text); }
+.upload__hint{ font-size:var(--fs-xs); color:var(--text-tertiary); }
+
+/* ---------- 8. Form sections ---------- */
+.form-section{ display:flex; flex-direction:column; gap:var(--space-4); }
+.form-section__head{
+  display:flex; align-items:center; gap:var(--space-3);
+  padding-bottom:var(--space-3);
+  border-bottom:1px solid var(--border);
+}
+.form-section__icon{ width:36px; height:36px; border-radius:var(--radius); background:var(--color-primary-50); color:var(--color-primary); display:grid; place-items:center; }
+.form-section__icon svg{ width:18px; height:18px; }
+.form-section__title{ font-weight:var(--fw-semibold); }
+.form-section__desc{ font-size:var(--fs-xs); color:var(--text-tertiary); }
+
+/* Form grid */
+.form-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:var(--space-4); }
+.form-grid.cols-3{ grid-template-columns:repeat(3,1fr); }
+.form-grid .span-2{ grid-column:span 2; }
+@media (max-width:768px){ .form-grid,.form-grid.cols-3{ grid-template-columns:1fr; } .form-grid .span-2{ grid-column:auto; } }
+
+/* Form footer */
+.form-footer{
+  display:flex; align-items:center; justify-content:space-between; gap:var(--space-3);
+  padding:var(--space-4) var(--space-5);
+  background:var(--surface-2);
+  border-radius:var(--radius-lg);
+  border:1px solid var(--border);
+}
+
+/* ---------- 9. Stepper ---------- */
+.stepper{ display:flex; align-items:center; gap:0; }
+.step{ display:flex; align-items:center; gap:var(--space-3); flex:1; min-width:0; }
+.step__num{
+  width:34px; height:34px; border-radius:50%;
+  display:grid; place-items:center;
+  background:var(--surface-2);
+  color:var(--text-tertiary);
+  border:1px solid var(--border-strong);
+  font-weight:600; font-size:var(--fs-sm);
+  flex-shrink:0;
+  transition:all var(--t);
+}
+.step__label{ font-size:var(--fs-sm); font-weight:var(--fw-medium); color:var(--text-tertiary); white-space:nowrap; }
+.step.is-active .step__num{ background:var(--color-primary); color:#fff; border-color:var(--color-primary); box-shadow:0 0 0 4px var(--color-primary-100); }
+.step.is-active .step__label{ color:var(--text); }
+.step.is-done .step__num{ background:var(--success); color:#fff; border-color:var(--success); }
+.step.is-done .step__label{ color:var(--text); }
+.step-line{ flex:1; height:2px; background:var(--border); margin:0 var(--space-2); min-width:24px; }
+.step-line.done{ background:var(--success); }
+@media (max-width:768px){ .step__label{ display:none; } }
+
+/* ---------- 10. Segmented / Toggle group ---------- */
+.segment{ display:inline-flex; background:var(--surface-2); padding:3px; border-radius:var(--radius-md); }
+.segment button{ padding:var(--space-2) var(--space-4); border-radius:var(--radius); font-size:var(--fs-sm); font-weight:500; color:var(--text-secondary); transition:all var(--t); display:inline-flex; align-items:center; gap:var(--space-2); }
+.segment button.is-active{ background:var(--surface); color:var(--color-primary); box-shadow:var(--shadow-xs); }

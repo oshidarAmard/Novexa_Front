@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تراکنش‌های انبار — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="inventory-tx">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>تراکنش‌های انبار</h1>
+      <p>تاریخچه ورود، خروج، انتقال و تعدیل موجودی</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> تراکنش جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon success"><i data-icon="trend-up"></i></div><div><div class="stat__label">ورودی امروز</div><div class="stat__value">۴۲۰</div></div><div class="stat__foot">۱۸ تراکنش</div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="trend-down"></i></div><div><div class="stat__label">خروجی امروز</div><div class="stat__value">۲۸۰</div></div><div class="stat__foot">۲۴ تراکنش</div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="move"></i></div><div><div class="stat__label">انتقال امروز</div><div class="stat__value">۱۲۰</div></div><div class="stat__foot">۶ تراکنش</div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="sliders"></i></div><div><div class="stat__label">تعدیل امروز</div><div class="stat__value">۸</div></div><div class="stat__foot">۳ تراکنش</div></div>
+  </div>
+
+  <div class="card"><div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+    <span class="text-sm text-muted">نوع تراکنش:</span>
+    <button class="pill is-active">همه</button>
+    <button class="pill"><span class="status-dot success"></span> ورود کالا</button>
+    <button class="pill"><span class="status-dot danger"></span> خروج کالا</button>
+    <button class="pill"><span class="status-dot info"></span> انتقال</button>
+    <button class="pill"><span class="status-dot warning"></span> تعدیل</button>
+  </div></div>
+
+  <div class="table-card" data-table='{"dataSource":"inventoryTx","pageSize":10,"searchPlaceholder":"جستجوی تراکنش...","createBtn":false,"filters":true,"columns":[
+    {"key":"id","label":"شماره تراکنش","type":"id","width":"130px"},
+    {"key":"product","label":"محصول","type":"product"},
+    {"key":"typeLabel","label":"نوع","type":"badge","width":"130px","badges":{"ورود کالا":{"label":"ورود","cls":"success"},"خروج کالا":{"label":"خروج","cls":"danger"},"انتقال":{"label":"انتقال","cls":"info"},"تعدیل":{"label":"تعدیل","cls":"warning"},"مرجوعی":{"label":"مرجوعی","cls":"info"}}},
+    {"key":"qty","label":"تعداد","type":"num","width":"100px"},
+    {"key":"from","label":"مبدأ","width":"140px"},
+    {"key":"to","label":"مقصد","width":"140px"},
+    {"key":"user","label":"کاربر","width":"140px"},
+    {"key":"date","label":"تاریخ و ساعت","type":"date","width":"170px"}
+  ]}'></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="layers" data-size="20"></i> ثبت تراکنش انبار</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">نوع تراکنش <span class="req">*</span></label><select class="select"><option>ورود کالا</option><option>خروج کالا</option><option>انتقال</option><option>تعدیل</option></select></div>
+          <div class="field"><label class="field-label">محصول <span class="req">*</span></label><select class="select"><option>گوشی سامسونگ Galaxy S24</option><option>لپ‌تاپ MacBook Pro</option></select></div>
+          <div class="field"><label class="field-label">تعداد <span class="req">*</span></label><input class="input" type="number" value="۱۰۰"></div>
+          <div class="field"><label class="field-label">انبار مبدأ</label><select class="select"><option>—</option><option>انبار مرکزی تهران</option><option>انبار پردیس</option></select></div>
+          <div class="field"><label class="field-label">انبار مقصد</label><select class="select"><option>انبار مرکزی تهران</option><option>انبار پردیس</option></select></div>
+          <div class="field"><label class="field-label">سند مرجع</label><input class="input" placeholder="PO-50210"></div>
+        </div>
+        <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea" placeholder="دلیل تراکنش..."></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ثبت شد',message:'تراکنش با موفقیت ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت تراکنش</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

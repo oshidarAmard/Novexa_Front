@@ -1,0 +1,179 @@
+/* ============================================================
+   NOVEXA ERP — RESPONSIVE & OVERFLOW FIXES (responsive.css)
+   Mobile / Tablet / Small desktop hardening
+   Loaded last so it wins specificity ties.
+   ============================================================ */
+
+/* ---------- 1. Prevent horizontal scroll globally ---------- */
+html, body{ overflow-x:hidden; }
+*, *::before, *::after{ max-width:100%; }
+img, svg, canvas, video{ max-width:100%; height:auto; }
+.workspace{ min-width:0; max-width:100%; }
+.app__main{ min-width:0; }
+.app__footer{ max-width:100%; }
+.topbar{ max-width:100%; }
+
+/* ---------- 2. KPI grids collapse gracefully ---------- */
+@media (max-width:1280px){
+  .kpi-grid{ grid-template-columns:repeat(4, 1fr) !important; }
+}
+@media (max-width:1024px){
+  .kpi-grid{ grid-template-columns:repeat(2, 1fr) !important; }
+}
+@media (max-width:560px){
+  .kpi-grid{ grid-template-columns:1fr !important; }
+  .stat{ padding:var(--space-4); }
+  .stat__value{ font-size:var(--fs-xl); }
+}
+
+/* ---------- 3. Dashboard grids ---------- */
+@media (max-width:1280px){
+  .dash-grid{ grid-template-columns:1fr !important; }
+  .dash-row{ grid-template-columns:1fr !important; }
+}
+
+/* ---------- 4. Page head: stack on small screens ---------- */
+@media (max-width:768px){
+  .page-head{ flex-direction:column; align-items:stretch; }
+  .page-head__title h1{ font-size:var(--fs-xl); }
+  .page-head__actions{ width:100%; }
+  .page-head__actions .btn{ flex:1; min-width:0; }
+  .page-head__actions .btn span{ white-space:nowrap; }
+}
+
+/* ---------- 5. Form layouts collapse to single column ---------- */
+@media (max-width:1024px){
+  .form-layout{ grid-template-columns:1fr !important; }
+  .form-layout > div:last-child{ position:static !important; }
+}
+@media (max-width:768px){
+  .form-grid,
+  .form-grid.cols-3,
+  .field-row{ grid-template-columns:1fr !important; }
+  .form-grid .span-2{ grid-column:auto !important; }
+  .info-list{ grid-template-columns:1fr !important; }
+}
+
+/* ---------- 6. Settings layout ---------- */
+@media (max-width:1024px){
+  .settings-layout{ grid-template-columns:1fr !important; }
+  .settings-nav{ position:static !important; }
+}
+
+/* ---------- 7. Tables: scroll horizontally, never break layout ---------- */
+.table-wrap{ overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.data-table{ min-width:560px; }
+@media (max-width:768px){
+  .table-toolbar{ flex-direction:column; align-items:stretch; }
+  .table-toolbar__search{ max-width:none !important; width:100% !important; }
+  .table-toolbar__actions{ width:100%; }
+  .table-toolbar__actions .btn{ flex:1; min-width:0; }
+  .pagination{ flex-direction:column; align-items:stretch; gap:var(--space-3); }
+  .pagination__nav{ justify-content:center; flex-wrap:wrap; }
+  /* bulk bar */
+  .bulk-bar{ flex-wrap:wrap; }
+  .bulk-bar .actions{ margin-inline-start:0 !important; width:100%; }
+  .bulk-bar .actions .btn{ flex:1; }
+}
+
+/* ---------- 8. Cards & sections ---------- */
+@media (max-width:768px){
+  .card__header{ flex-wrap:wrap; gap:var(--space-2); }
+  .card__body{ padding:var(--space-4); }
+  .card__header{ padding:var(--space-4) var(--space-4) 0; }
+  .form-footer{ flex-direction:column-reverse; align-items:stretch; }
+  .form-footer .flex{ width:100%; }
+  .form-footer .btn{ flex:1; }
+}
+
+/* ---------- 9. Topbar tuning on small screens ---------- */
+@media (max-width:1024px){
+  .user-chip__info{ display:none !important; }
+}
+@media (max-width:480px){
+  .topbar__end .icon-btn{ width:36px; height:36px; }
+  .hide-mobile{ display:none !important; }
+}
+
+/* ---------- 10. Modal / Drawer on mobile ---------- */
+@media (max-width:768px){
+  .modal-backdrop{ padding:var(--space-3); }
+  .modal{ width:100% !important; max-height:92vh; }
+  .modal--sm, .modal--lg, .modal--xl{ width:100% !important; }
+  .modal__body{ padding:var(--space-4); }
+  .modal__footer{ flex-direction:column-reverse; align-items:stretch; }
+  .modal__footer .btn{ width:100%; }
+  .drawer{ width:100% !important; }
+  .drawer--lg{ width:100% !important; }
+  .drawer__footer{ flex-direction:column-reverse; }
+  .drawer__footer .btn{ width:100%; }
+}
+
+/* ---------- 11. Search & notification panels on mobile ---------- */
+@media (max-width:768px){
+  .notif-panel{ width:calc(100vw - 24px) !important; inset-inline-end:12px !important; }
+  .search-panel{ width:calc(100vw - 24px) !important; }
+  .toast-wrap{ inset-inline-end:12px; inset-block-end:12px; left:12px; }
+  .toast{ min-width:0; width:100%; }
+}
+
+/* ---------- 12. Charts: keep aspect ratio, avoid overflow ---------- */
+.chart-box{ position:relative; min-height:200px; }
+.chart-box canvas{ max-width:100%; }
+@media (max-width:768px){
+  .chart-box{ height:220px !important; }
+  .chart-box.sm{ height:200px !important; }
+}
+
+/* ---------- 13. Detail hero & quick-grid ---------- */
+@media (max-width:768px){
+  .detail-hero{ flex-direction:column; align-items:stretch; }
+  .detail-hero__meta{ gap:var(--space-3); }
+  .quick-grid{ grid-template-columns:repeat(2, 1fr) !important; }
+  .wh-cards, #whCards, #reports, #roleCards, #brandGrid, #gridView{ grid-template-columns:1fr !important; }
+  #gridView[style*="grid"]{ grid-template-columns:repeat(2, 1fr) !important; }
+}
+
+/* ---------- 14. Invoice / segmented controls ---------- */
+@media (max-width:768px){
+  .segment{ width:100%; }
+  .segment button{ flex:1; justify-content:center; }
+}
+
+/* ---------- 15. Fix any inline-style grids that are too wide ---------- */
+@media (max-width:1024px){
+  [style*="grid-template-columns: 2fr 1fr"],
+  [style*="grid-template-columns:repeat(3, 1fr)"],
+  [style*="grid-template-columns:repeat(5, 1fr)"],
+  [style*="grid-template-columns:260px 1fr"],
+  [style*="grid-template-columns: 1fr 1fr 1fr"]{ grid-template-columns:1fr !important; }
+}
+@media (max-width:640px){
+  [style*="grid-template-columns:repeat(2, 1fr)"]{ grid-template-columns:1fr !important; }
+}
+
+/* ---------- 16. Login page ---------- */
+@media (max-width:1024px){
+  .auth{ grid-template-columns:1fr !important; }
+  .auth__hero{ display:none; }
+  .auth__panel{ padding:var(--space-4); }
+}
+
+/* ---------- 17. Tabs: allow horizontal scroll ---------- */
+.tabs__nav{ -webkit-overflow-scrolling:touch; }
+
+/* ---------- 18. Avoid sticky positioning breaking on mobile ---------- */
+@media (max-width:1024px){
+  .sidebar{ position:fixed !important; }
+}
+
+/* ---------- 19. Prevent wide content forcing scroll ---------- */
+.flex{ min-width:0; }
+.cell-strong, .truncate{ min-width:0; }
+input, select, textarea{ min-width:0; }
+
+/* ---------- 20. Footer wrap ---------- */
+@media (max-width:768px){
+  .app__footer{ flex-direction:column; gap:var(--space-1); padding:var(--space-2); text-align:center; height:auto; }
+  .app{ grid-template-rows:var(--topbar-h) 1fr auto; }
+}

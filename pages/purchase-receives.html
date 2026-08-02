@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>رسید کالا — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="purchase-receives">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>رسید کالا</h1>
+      <p>ثبت ورود محموله‌های خرید و تطبیق با سفارش</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="truck" data-size="18"></i> رسید جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon success"><i data-icon="package"></i></div><div><div class="stat__label">رسیدهای امروز</div><div class="stat__value">۸</div></div></div>
+    <div class="stat"><div class="stat__icon primary"><i data-icon="box"></i></div><div><div class="stat__label">کل اقلام دریافتی</div><div class="stat__value">۱٬۲۴۰</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="alert"></i></div><div><div class="stat__label">مغایرت</div><div class="stat__value">۳</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="dollar"></i></div><div><div class="stat__label">ارزش دریافتی</div><div class="stat__value">۴۸۰م‌ت</div></div></div>
+  </div>
+
+  <div id="tbl"></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="truck" data-size="20"></i> ثبت رسید کالا</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">سفارش خرید مرجع <span class="req">*</span></label><select class="select"><option>PO-50210</option><option>PO-50211</option></select></div>
+          <div class="field"><label class="field-label">تأمین‌کننده</label><input class="input" value="شرکت گسترش آریا صنعت" readonly style="background:var(--surface-2);"></div>
+          <div class="field"><label class="field-label">تاریخ رسید</label><input class="input" value="۱۴۰۳/۰۷/۱۲"></div>
+          <div class="field"><label class="field-label">شماره بارنامه</label><input class="input" placeholder="BL-..."></div>
+          <div class="field"><label class="field-label">راننده / حمل</label><input class="input" placeholder="نام راننده"></div>
+          <div class="field"><label class="field-label">انبار تخلیه</label><select class="select"><option>انبار مرکزی تهران</option><option>انبار پردیس</option></select></div>
+        </div>
+        <h4 class="mt-6 mb-4">تطبیق اقلام</h4>
+        <div class="table-card"><div class="table-wrap"><table class="data-table">
+          <thead><tr><th>محصول</th><th>تعداد سفارش</th><th>تعداد دریافت</th><th>تعداد مغایر</th><th>کیفیت</th></tr></thead>
+          <tbody>
+            <tr><td>گوشی سامسونگ Galaxy S24</td><td class="num">۱۰۰</td><td><input class="input input-sm" style="width:80px;" value="۱۰۰"></td><td class="num text-success">۰</td><td><span class="badge badge-success">سالم</span></td></tr>
+            <tr><td>هدفون سونی WH-1000XM5</td><td class="num">۵۰</td><td><input class="input input-sm" style="width:80px;" value="۴۸"></td><td class="num text-danger">۲-</td><td><span class="badge badge-warning">کم</span></td></tr>
+            <tr><td>تبلت iPad Air 5</td><td class="num">۳۰</td><td><input class="input input-sm" style="width:80px;" value="۳۰"></td><td class="num text-success">۰</td><td><span class="badge badge-success">سالم</span></td></tr>
+          </tbody>
+        </table></div></div>
+        <div class="alert alert-warning mt-4"><span class="alert__icon"><i data-icon="alert"></i></span><div><div class="alert__title">مغایرت شناسایی شد</div><div class="alert__body">برای ۲ عدد از هدفون سونی WH-1000XM5 مغایرت ثبت شد. برای ثبت reachable با تأمین‌کننده اقدام کنید.</div></div></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ثبت شد',message:'رسید کالا با موفقیت ثبت و موجودی به‌روزرسانی شد.'})"><i data-icon="check" data-size="16"></i> ثبت رسید</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.UI)return;
+    const el=document.getElementById('tbl'); el.className='table-card';
+    const data=Array.from({length:14}).map((_,i)=>{
+      const st=NOVEXA.pick([{l:'تکمیل‌شده',c:'success'},{l:'مغایرت دارد',c:'warning'},{l:'در انتظار بررسی',c:'info'}]);
+      return {id:'GRN-'+NOVEXA.toFa(33000+i),po:'PO-'+NOVEXA.toFa(50200+(i%10)),supplier:NOVEXA.companyName(),date:NOVEXA.faDate('۱۴۰۳/۰'+NOVEXA.toFa(1+(i%7))+'/'+NOVEXA.toFa(1+(i%28))),items:Math.floor(3+Math.random()*40),diff:st.l==='مغایرت دارد'?'۲':'۰',status:st.l,statusCls:st.c};
+    });
+    UI.Table.create(el,{
+      data,pageSize:10,searchPlaceholder:'جستجوی رسید...',createText:'رسید جدید',createHref:'#',
+      columns:[
+        {key:'id',label:'شماره رسید',type:'id',width:'130px'},
+        {key:'po',label:'سفارش مرجع',type:'id',width:'120px'},
+        {key:'supplier',label:'تأمین‌کننده'},
+        {key:'date',label:'تاریخ',type:'date',width:'120px'},
+        {key:'items',label:'اقلام',type:'num',width:'90px'},
+        {key:'diff',label:'مغایرت',type:'num',width:'90px',render:(v)=>v==='۰'?'<span class="text-success">۰</span>':'<span class="text-danger">'+v+'</span>'},
+        {key:'status',label:'وضعیت',type:'custom',width:'150px',render:(v,r)=>`<span class="badge badge-${r.statusCls}">${v}</span>`},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+</script>
+</body>
+</html>

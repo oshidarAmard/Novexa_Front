@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>انتقال کالا — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="stock-transfer">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>انتقال کالا بین انبارها</h1>
+      <p>ثبت و پیگیری درخواست‌های انتقال موجودی</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="move" data-size="18"></i> درخواست انتقال</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon info"><i data-icon="move"></i></div><div><div class="stat__label">در حال انتقال</div><div class="stat__value">۷</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">در انتظار تأیید</div><div class="stat__value">۳</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">تکمیل‌شده امروز</div><div class="stat__value">۱۲</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="x"></i></div><div><div class="stat__label">لغوشده</div><div class="stat__value">۲</div></div></div>
+  </div>
+
+  <div id="tbl"></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="move" data-size="20"></i> درخواست انتقال کالا</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="alert alert-info"><span class="alert__icon"><i data-icon="info"></i></span><div><div class="alert__title">اطلاعات انتقال</div><div class="alert__body">موجودی پس از تأیید مدیر مقصد، از مبدأ کسر و به مقصد اضافه می‌شود.</div></div></div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">انبار مبدأ <span class="req">*</span></label><select class="select"><option>انبار مرکزی تهران</option><option>انبار پردیس</option></select></div>
+          <div class="field"><label class="field-label">انبار مقصد <span class="req">*</span></label><select class="select"><option>انبار پردیس</option><option>انبار شیراز</option></select></div>
+        </div>
+        <h4 class="mt-6 mb-4">اقلام منتقل‌شونده</h4>
+        <div class="table-card"><div class="table-wrap"><table class="data-table">
+          <thead><tr><th>محصول</th><th>موجودی مبدأ</th><th>تعداد انتقال</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><div class="cell-strong">گوشی سامسونگ Galaxy S24</div><div class="cell-sub">NV-10048</div></td><td class="num">۲۱۰</td><td><input class="input input-sm" style="width:80px;" type="number" value="۵۰"></td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+            <tr><td><div class="cell-strong">هدفون سونی WH-1000XM5</div><div class="cell-sub">NV-10052</div></td><td class="num">۸۴</td><td><input class="input input-sm" style="width:80px;" type="number" value="۲۰"></td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+          </tbody>
+        </table></div></div>
+        <button class="btn btn-text mt-4"><i data-icon="plus" data-size="16"></i> افزودن کالای دیگر</button>
+        <div class="field mt-6"><label class="field-label">توضیحات</label><textarea class="textarea" placeholder="دلیل انتقال..."></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ثبت شد',message:'درخواست انتقال ثبت شد.'})"><i data-icon="send" data-size="16"></i> ثبت درخواست</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.UI)return;
+    const el=document.getElementById('tbl'); el.className='table-card';
+    const data=Array.from({length:15}).map((_,i)=>{
+      const from=NOVEXA.pick(NOVEXA.WAREHOUSES),to=NOVEXA.pick(NOVEXA.WAREHOUSES);
+      const st=NOVEXA.pick([{l:'در انتظار',c:'warning'},{l:'در حال انتقال',c:'info'},{l:'تکمیل‌شده',c:'success'},{l:'لغوشده',c:'danger'}]);
+      return {id:'TR-'+NOVEXA.toFa(20400+i),from:from.name,to:to.name,items:Math.floor(2+Math.random()*40),qty:Math.floor(20+Math.random()*400),date:NOVEXA.faDate('۱۴۰۳/۰'+NOVEXA.toFa(1+(i%7))+'/۰'+NOVEXA.toFa(1+(i%9))),status:st.l,statusCls:st.c};
+    });
+    UI.Table.create(el,{
+      data,pageSize:10,searchPlaceholder:'جستجوی انتقال...',createText:'انتقال جدید',createHref:'#',
+      columns:[
+        {key:'id',label:'شماره درخواست',type:'id',width:'130px'},
+        {key:'from',label:'مبدأ',type:'custom',render:(v)=>`<div style="display:flex;align-items:center;gap:8px;"><span class="avatar avatar-sm" style="background:var(--info-50);color:var(--info)"><i data-icon="warehouse" data-size="14"></i></span>${v}</div>`},
+        {key:'to',label:'مقصد',type:'custom',render:(v)=>`<div style="display:flex;align-items:center;gap:8px;"><i data-icon="arrow-left" data-size="14" style="color:var(--text-tertiary)"></i><span class="avatar avatar-sm" style="background:var(--success-50);color:var(--success)"><i data-icon="warehouse" data-size="14"></i></span>${v}</div>`},
+        {key:'items',label:'اقلام',type:'num',width:'90px'},
+        {key:'qty',label:'تعداد کل',type:'num',width:'110px'},
+        {key:'date',label:'تاریخ',type:'date',width:'120px'},
+        {key:'status',label:'وضعیت',type:'custom',width:'130px',render:(v,r)=>`<span class="badge badge-${r.statusCls}">${v}</span>`},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+</script>
+</body>
+</html>

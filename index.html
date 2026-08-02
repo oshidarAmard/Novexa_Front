@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ورود — نوواکسا ERP</title>
+  <script src="assets/js/head.js"></script>
+</head>
+<body>
+  <main class="auth">
+    <!-- Hero -->
+    <section class="auth__hero">
+      <div class="auth__brand">
+        <div class="brand-logo">${''}</div>
+        <strong>نوواکسا</strong>
+      </div>
+      <div>
+        <h2>سامانه برنامه‌ریزی منابع سازمانی<br>نگاهی نوین به مدیریت کسب‌وکار شما</h2>
+        <p>نوواکسا تمام فرایندهای فروش، خرید، انبار و مالی سازمان شما را در یک پلتفرم یکپارچه، امن و هوشمند گرد هم می‌آورد.</p>
+        <div class="auth__features" style="margin-top:32px;">
+          <div class="auth__feature"><span class="ic" data-icon="box"></span> مدیریت یکپارچه کاتالوگ و انبار</div>
+          <div class="auth__feature"><span class="ic" data-icon="chart"></span> داشبورد و گزارش‌های لحظه‌ای</div>
+          <div class="auth__feature"><span class="ic" data-icon="shield"></span> امنیت سطح سازمانی و کنترل دسترسی</div>
+          <div class="auth__feature"><span class="ic" data-icon="globe"></span> پشتیبانی کامل از زبان فارسی و راست‌چین</div>
+        </div>
+      </div>
+      <div style="position:relative;z-index:1;color:rgba(255,255,255,.5);font-size:13px;">© ۱۴۰۳ نوواکسا ERP — تمامی حقوق محفوظ است.</div>
+    </section>
+
+    <!-- Panel -->
+    <section class="auth__panel">
+      <div class="auth__card">
+        <div class="flex items-center gap-3 mb-6">
+          <div class="brand-logo" style="width:44px;height:44px;"></div>
+          <div>
+            <h1 style="font-size:22px;">خوش آمدید 👋</h1>
+            <div class="sub">برای ورود به حساب کاربری خود اطلاعات را وارد کنید</div>
+          </div>
+        </div>
+
+        <form id="loginForm" onsubmit="return false;">
+          <div class="field">
+            <label class="field-label">نام کاربری یا ایمیل</label>
+            <div class="input-group">
+              <span class="input-icon" data-icon="user"></span>
+              <input class="input" type="text" placeholder="milad.rezaei" value="milad.rezaei" autocomplete="username">
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="flex justify-between items-center">
+              <label class="field-label">رمز عبور</label>
+              <a href="#" class="btn-text" style="color:var(--color-primary);font-size:13px;">فراموشی رمز؟</a>
+            </div>
+            <div class="input-group">
+              <span class="input-icon" data-icon="lock"></span>
+              <input class="input" type="password" id="pwd" placeholder="••••••••" value="novexa@1403" autocomplete="current-password">
+              <button type="button" class="input-affix" id="togglePwd" style="background:none;border:none;color:var(--text-tertiary);width:24px;height:24px;"></button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="switch">
+              <input type="checkbox" checked>
+              <span class="switch__track"></span>
+              <span style="font-size:14px;">مرا به خاطر بسپار</span>
+            </label>
+          </div>
+
+          <button class="btn btn-primary btn-block btn-lg" type="submit" id="loginBtn">
+            <span class="btn-label">ورود به سامانه</span>
+            <span data-icon="arrow-left" data-size="18"></span>
+          </button>
+        </form>
+
+        <div class="auth__alt"><span>یا ورود با</span></div>
+        <div class="social-row">
+          <button class="social-btn" title="گوگل">G</button>
+          <button class="social-btn" title="مایکروسافت">◷</button>
+          <button class="social-btn" title="سامانه statewide">🇮🇷</button>
+        </div>
+
+        <div class="auth__foot">
+          حساب کاربری ندارید؟ <a href="#" style="color:var(--color-primary);font-weight:600;">تماس با تیم فروش</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modal: success -->
+  <div class="modal-backdrop" id="successModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <div class="modal__title"><span class="icon success" data-icon="check-circle"></span> ورود موفق</div>
+      </div>
+      <div class="modal__body">
+        <p style="color:var(--text-secondary);font-size:14px;">خوش آمدید میلاد عزیز! در حال انتقال به داشبورد...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/components.js"></script>
+  <script>
+    // Manual brand logo content
+    document.querySelectorAll('.brand-logo').forEach(el => el.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5V8z"/><path d="M3 8l9 5 9-5"/><path d="M12 13v8"/></svg>');
+    renderIcons();
+    // toggle password
+    let shown = false;
+    const pwd = document.getElementById('pwd');
+    const tg = document.getElementById('togglePwd');
+    tg.innerHTML = Icon('eye', 18);
+    tg.addEventListener('click', () => {
+      shown = !shown;
+      pwd.type = shown ? 'text' : 'password';
+      tg.innerHTML = Icon(shown ? 'eye' : 'lock', 18);
+    });
+    // submit
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      btn.classList.add('is-loading');
+      setTimeout(() => {
+        UI.Modal.open('successModal');
+        setTimeout(() => location.href = 'pages/dashboard.html', 1100);
+      }, 800);
+    });
+  </script>
+</body>
+</html>

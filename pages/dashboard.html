@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>داشبورد — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="dashboard">
+<div id="app">
+  <!-- PAGE CONTENT -->
+
+  <!-- Page header + breadcrumb -->
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>داشبورد مدیریت</h1>
+      <p>نمای کلی عملکرد سازمان — به‌روز شده در ۱۴۰۳/۰۷/۱۲</p>
+    </div>
+    <div class="page-head__actions">
+      <div class="segment">
+        <button class="is-active">امروز</button>
+        <button>این هفته</button>
+        <button>این ماه</button>
+        <button>سال جاری</button>
+      </div>
+      <button class="btn btn-outline"><i data-icon="calendar" data-size="18"></i> ۱۴۰۳/۰۷/۰۱ - ۱۴۰۳/۰۷/۱۲</button>
+      <button class="btn btn-outline" data-tooltip="به‌روزرسانی"><i data-icon="refresh" data-size="18"></i></button>
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> خروجی گزارش</button>
+    </div>
+  </div>
+
+  <!-- Welcome strip -->
+  <div class="card">
+    <div class="card__body" style="display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;background:linear-gradient(135deg,var(--color-primary-50),transparent);">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div class="avatar avatar-xl online">م‌ر</div>
+        <div>
+          <div style="font-size:13px;color:var(--text-secondary);">صبح بخیر،</div>
+          <h2 style="font-size:22px;">میلاد رضایی 👋</h2>
+          <div style="color:var(--text-secondary);font-size:13px;margin-top:4px;">شما <b style="color:var(--color-primary);">۸ کار</b> معلق و <b style="color:var(--danger);">۳ هشدار</b> موجودی دارید.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <a class="btn btn-primary" href="sales-invoice.html"><i data-icon="plus" data-size="18"></i> فاکتور جدید</a>
+        <a class="btn btn-outline" href="purchase-orders.html"><i data-icon="cart" data-size="18"></i> سفارش خرید</a>
+        <a class="btn btn-outline" href="stock-transfer.html"><i data-icon="move" data-size="18"></i> انتقال کالا</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- KPI cards -->
+  <div class="kpi-grid" id="kpiGrid"></div>
+
+  <!-- Charts row 1: revenue + categories -->
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card__header">
+        <div>
+          <div class="card__title"><i data-icon="trend-up" data-size="18"></i> روند درآمد و هزینه</div>
+          <div class="card__subtitle">مقایسه فروش و خرید سال ۱۴۰۳ (میلیون تومان)</div>
+        </div>
+        <div class="dropdown">
+          <button class="icon-btn" data-dropdown><i data-icon="more-v" data-size="18"></i></button>
+          <div class="dropdown__menu align-end">
+            <div class="dropdown__item"><i data-icon="download" data-size="16"></i> دانلود</div>
+            <div class="dropdown__item"><i data-icon="print" data-size="16"></i> چاپ</div>
+            <div class="dropdown__item"><i data-icon="maximize" data-size="16"></i> تمام صفحه</div>
+          </div>
+        </div>
+      </div>
+      <div class="card__body">
+        <div class="chart-legend">
+          <span class="lg"><span class="swatch" style="background:var(--color-primary);"></span> فروش</span>
+          <span class="lg"><span class="swatch" style="background:var(--warning);"></span> خرید</span>
+        </div>
+        <div class="chart-box" style="margin-top:12px;">
+          <div class="chart-wrap"><canvas data-chart="line" data-src="revenue"></canvas></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <div>
+          <div class="card__title"><i data-icon="pie" data-size="18"></i> ترکیب فروش</div>
+          <div class="card__subtitle">بر اساس دسته‌بندی محصول</div>
+        </div>
+      </div>
+      <div class="card__body">
+        <div class="chart-box sm" style="position:relative;">
+          <div class="chart-wrap"><canvas id="catDonut"></canvas></div>
+          <div class="donut-center">
+            <div class="val">۲٫۴م‌ت</div>
+            <div class="lbl">فروش این ماه</div>
+          </div>
+        </div>
+        <div class="chart-legend" style="flex-direction:column;gap:8px;margin-top:16px;">
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span class="lg"><span class="swatch" style="background:var(--color-primary);"></span> کالای دیجیتال</span><b class="num">۴۲٪</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span class="lg"><span class="swatch" style="background:var(--success);"></span> لوازم خانگی</span><b class="num">۲۴٪</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span class="lg"><span class="swatch" style="background:var(--warning);"></span> پوشاک</span><b class="num">۱۴٪</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span class="lg"><span class="swatch" style="background:var(--info);"></span> مواد غذایی</span><b class="num">۱۰٪</b></div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;"><span class="lg"><span class="swatch" style="background:var(--danger);"></span> آرایشی</span><b class="num">۶٪</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts row 2 -->
+  <div class="dash-row">
+    <div class="card">
+      <div class="card__header">
+        <div>
+          <div class="card__title"><i data-icon="bar" data-size="18"></i> فروش هفتگی</div>
+          <div class="card__subtitle">میلیون تومان</div>
+        </div>
+        <span class="badge badge-success">۱۲٪+</span>
+      </div>
+      <div class="card__body">
+        <div class="chart-box sm"><div class="chart-wrap"><canvas data-chart="bar" data-src="weekly"></canvas></div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__header">
+        <div>
+          <div class="card__title"><i data-icon="credit" data-size="18"></i> روش‌های پرداخت</div>
+          <div class="card__subtitle">توزیع پرداخت‌های این ماه</div>
+        </div>
+      </div>
+      <div class="card__body">
+        <div class="chart-box sm" style="position:relative;">
+          <div class="chart-wrap"><canvas id="payDonut"></canvas></div>
+          <div class="donut-center">
+            <div class="val">۱٫۲م</div>
+            <div class="lbl">تراکنش</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__header">
+        <div>
+          <div class="card__title"><i data-icon="warehouse" data-size="18"></i> ظرفیت انبارها</div>
+          <div class="card__subtitle">درصد اشغال</div>
+        </div>
+      </div>
+      <div class="card__body" id="warehouseBars" style="display:flex;flex-direction:column;gap:14px;"></div>
+    </div>
+  </div>
+
+  <!-- Quick actions + pinned -->
+  <div class="card">
+    <div class="card__header">
+      <div class="card__title"><i data-icon="zap" data-size="18"></i> دسترسی سریع</div>
+      <a href="#" class="btn-text" style="color:var(--color-primary);font-size:13px;">شخصی‌سازی</a>
+    </div>
+    <div class="card__body">
+      <div class="quick-grid">
+        <a class="quick-action" href="product-create.html"><span class="quick-action__icon" data-icon="plus"></span><span class="quick-action__label">محصول جدید</span></a>
+        <a class="quick-action" href="sales-invoice.html"><span class="quick-action__icon" data-icon="file"></span><span class="quick-action__label">فاکتور فروش</span></a>
+        <a class="quick-action" href="purchase-orders.html"><span class="quick-action__icon" data-icon="cart"></span><span class="quick-action__label">سفارش خرید</span></a>
+        <a class="quick-action" href="customers.html"><span class="quick-action__icon" data-icon="user"></span><span class="quick-action__label">مشتری جدید</span></a>
+        <a class="quick-action" href="stock-transfer.html"><span class="quick-action__icon" data-icon="move"></span><span class="quick-action__label">انتقال کالا</span></a>
+        <a class="quick-action" href="payments.html"><span class="quick-action__icon" data-icon="dollar"></span><span class="quick-action__label">ثبت پرداخت</span></a>
+        <a class="quick-action" href="inventory-tx.html"><span class="quick-action__icon" data-icon="layers"></span><span class="quick-action__label">تراکنش انبار</span></a>
+        <a class="quick-action" href="reports.html"><span class="quick-action__icon" data-icon="chart"></span><span class="quick-action__label">گزارش جدید</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent sales + activities -->
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card__header">
+        <div class="card__title"><i data-icon="shopping" data-size="18"></i> آخرین فروشات</div>
+        <a href="sales.html" class="btn-text" style="color:var(--color-primary);font-size:13px;">مشاهده همه</a>
+      </div>
+      <div class="card__body flush">
+        <div class="table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr><th>فاکتور</th><th>مشتری</th><th>مبلغ</th><th>وضعیت</th><th class="col-num">تاریخ</th></tr>
+            </thead>
+            <tbody id="recentSales"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <div class="card__title"><i data-icon="activity" data-size="18"></i> فعالیت‌های اخیر</div>
+      </div>
+      <div class="card__body">
+        <div class="timeline" id="dashTimeline"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tasks + notifications -->
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card__header">
+        <div class="card__title"><i data-icon="check-circle" data-size="18"></i> کارهای من</div>
+        <a href="#" class="btn-text" style="color:var(--color-primary);font-size:13px;">مشاهده همه</a>
+      </div>
+      <div class="card__body" id="dashTasks" style="display:flex;flex-direction:column;gap:4px;"></div>
+    </div>
+
+    <div class="card">
+      <div class="card__header">
+        <div class="card__title"><i data-icon="bell" data-size="18"></i> اعلان‌های اخیر</div>
+        <span class="badge badge-danger">۳ جدید</span>
+      </div>
+      <div class="card__body flush" id="dashNotifs"></div>
+    </div>
+  </div>
+
+  <!-- Recent purchases table -->
+  <div class="table-card" data-table='{
+    "dataSource":"purchaseOrders",
+    "pageSize":5,
+    "searchPlaceholder":"جستجوی سفارش خرید...",
+    "createBtn":false,
+    "columns":[
+      {"key":"id","label":"شماره سفارش","type":"id","width":"120px"},
+      {"key":"supplier","label":"تأمین‌کننده"},
+      {"key":"warehouse","label":"انبار مقصد"},
+      {"key":"items","label":"اقلام","type":"num","width":"80px"},
+      {"key":"total","label":"مبلغ کل","type":"money","width":"180px"},
+      {"key":"statusLabel","label":"وضعیت","type":"badge","width":"140px","badges":{"پیش‌نویس":{"label":"پیش‌نویس","cls":"neutral"},"در انتظار تأیید":{"label":"در انتظار","cls":"warning"},"تأیید شده":{"label":"تأیید شده","cls":"info"},"در حال ارسال":{"label":"ارسال","cls":"info"},"تحویل شده":{"label":"تحویل شده","cls":"success"},"لغو شده":{"label":"لغو","cls":"danger"}}},
+      {"key":"date","label":"تاریخ","type":"date","width":"120px"}
+    ]
+  }'></div>
+
+</div>
+
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  // Wait for layout + data
+  function build() {
+    // KPIs
+    const trendIcon = (t) => t >= 0 ? '<span class="trend up">' + Icon('trend-up', 12) + ' ' + NOVEXA.toFa(Math.abs(t)) + '٪</span>'
+                                   : '<span class="trend down">' + Icon('trend-down', 12) + ' ' + NOVEXA.toFa(Math.abs(t)) + '٪</span>';
+    document.getElementById('kpiGrid').innerHTML = NOVEXA.KPIS.map(k => `
+      <div class="stat">
+        <div class="stat__head">
+          <div class="stat__icon ${k.color}">${Icon(k.icon, 22)}</div>
+          ${trendIcon(k.trend)}
+        </div>
+        <div>
+          <div class="stat__label">${k.label}</div>
+          <div class="stat__value">${k.value}</div>
+        </div>
+        <div class="stat__foot">${k.suffix} <span style="opacity:.6;">•</span> ${k.sub}</div>
+      </div>`).join('');
+    renderIcons(document.getElementById('kpiGrid'));
+
+    // Recent sales
+    document.getElementById('recentSales').innerHTML = NOVEXA.sales.slice(0,5).map(s => `
+      <tr>
+        <td><span class="cell-id">${s.id}</span></td>
+        <td>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <span class="avatar avatar-sm">${NOVEXA.initials(s.customer)}</span>
+            <div><div class="cell-strong truncate" style="max-width:160px;">${s.customer}</div></div>
+          </div>
+        </td>
+        <td class="cell-money">${NOVEXA.faMoney(s.total)} <span class="currency">ت</span></td>
+        <td><span class="badge badge-${s.statusCls}">${s.statusLabel}</span></td>
+        <td class="cell-sub num">${s.date}</td>
+      </tr>`).join('');
+
+    // Timeline
+    document.getElementById('dashTimeline').innerHTML = NOVEXA.activities.slice(0,7).map(a => `
+      <div class="tl-item ${a.type}">
+        <div class="tl-dot"></div>
+        <div class="tl-title">${a.user}</div>
+        <div class="tl-body">${a.text}</div>
+        <div class="tl-meta">${a.time}</div>
+      </div>`).join('');
+
+    // Tasks
+    document.getElementById('dashTasks').innerHTML = NOVEXA.TASKS.map(t => `
+      <div class="task-item">
+        <input type="checkbox" class="chk" ${t.done?'checked':''}>
+        <div class="task-item__body">
+          <div class="task-item__title" style="${t.done?'text-decoration:line-through;color:var(--text-tertiary);':''}">${t.title}</div>
+          <div class="task-item__meta">مهلت: ${t.due}</div>
+        </div>
+        <span class="badge ${t.priority==='high'?'badge-danger':(t.priority==='med'?'badge-warning':'badge-neutral')}">${t.priority==='high'?'فوری':(t.priority==='med'?'متوسط':'کم')}</span>
+      </div>`).join('');
+
+    // Notifs
+    const colorMap = { primary:'var(--color-primary-50);color:var(--color-primary)', success:'var(--success-50);color:var(--success)', warning:'var(--warning-50);color:var(--warning)', danger:'var(--danger-50);color:var(--danger)', info:'var(--info-50);color:var(--info)' };
+    document.getElementById('dashNotifs').innerHTML = NOVEXA.NOTIFS.slice(0,5).map(n => `
+      <div class="notif-item ${n.unread?'unread':''}">
+        <div class="notif-item__icon" style="background:${colorMap[n.color]}">${Icon(n.icon,18)}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:600;font-size:14px;">${n.title}</div>
+          <div style="font-size:12px;color:var(--text-secondary);margin-top:2px;">${n.body}</div>
+          <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px;">${n.time} • ${n.cat}</div>
+        </div>
+      </div>`).join('');
+    renderIcons(document.getElementById('dashNotifs'));
+
+    // Warehouse capacity bars
+    document.getElementById('warehouseBars').innerHTML = NOVEXA.WAREHOUSES.slice(0,5).map(w => {
+      const pct = Math.round((w.used / w.capacity) * 100);
+      const cls = pct > 85 ? 'danger' : (pct > 60 ? 'warning' : 'success');
+      return `
+      <div>
+        <div class="flex justify-between" style="margin-bottom:6px;font-size:13px;">
+          <span style="font-weight:500;">${w.name}</span>
+          <span class="num text-muted">${NOVEXA.toFa(pct)}٪</span>
+        </div>
+        <div class="progress"><div class="progress__bar ${cls==='warning'?'warning':(cls==='danger'?'danger':'success')}" style="width:${pct}%"></div></div>
+      </div>`;
+    }).join('');
+  }
+  // ensure NOVEXA ready
+  if (window.NOVEXA) build();
+  else window.addEventListener('load', build);
+
+  // Donut charts (need to wait for canvas to be sized by layout)
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      if (window.Charts) {
+        Charts.donut(document.getElementById('catDonut'), NOVEXA.CHART.categories.labels, NOVEXA.CHART.categories.data,
+          ['#2563EB','#22C55E','#F59E0B','#06B6D4','#EF4444','#7C3AED'], { center: '۴۲٪', centerLabel: 'دیجیتال' });
+        Charts.donut(document.getElementById('payDonut'), NOVEXA.CHART.payment.labels, NOVEXA.CHART.payment.data,
+          ['#22C55E','#2563EB','#F59E0B','#7C3AED'], { center: '۴۸٪', centerLabel: 'نقدی' });
+      }
+    }, 200);
+  });
+</script>
+</body>
+</html>

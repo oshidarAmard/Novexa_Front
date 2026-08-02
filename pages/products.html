@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>محصولات — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="products">
+<div id="app">
+  <!-- Page head -->
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مدیریت محصولات</h1>
+      <p>کاتالوگ کامل کالاها و خدمات — ۱۲۸ محصول فعال</p>
+    </div>
+    <div class="page-head__actions">
+      <div class="segment">
+        <button class="is-active" data-view="table"><i data-icon="list" data-size="16"></i> جدول</button>
+        <button data-view="grid"><i data-icon="grid" data-size="16"></i> کارتی</button>
+      </div>
+      <button class="btn btn-outline"><i data-icon="upload" data-size="18"></i> <span class="hide-mobile">ورودی اکسل</span></button>
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <a class="btn btn-primary" href="product-create.html"><i data-icon="plus" data-size="18"></i> محصول جدید</a>
+    </div>
+  </div>
+
+  <!-- Stat cards -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__head"><div class="stat__icon primary"><i data-icon="box"></i></div></div><div><div class="stat__label">کل محصولات</div><div class="stat__value">۱۲۸</div></div><div class="stat__foot">۲۴٪ فعال‌تر از ماه قبل</div></div>
+    <div class="stat"><div class="stat__head"><div class="stat__icon success"><i data-icon="trend-up"></i></div><span class="trend up"><i data-icon="trend-up" data-size="12"></i> ۸٪</span></div><div><div class="stat__label">محصولات پرفروش</div><div class="stat__value">۲۴</div></div><div class="stat__foot">این ماه</div></div>
+    <div class="stat"><div class="stat__head"><div class="stat__icon danger"><i data-icon="alert"></i></div><span class="trend down"><i data-icon="trend-down" data-size="12"></i> ۳٪</span></div><div><div class="stat__label">موجودی کم</div><div class="stat__value">۱۴</div></div><div class="stat__foot">نیاز به شارژ</div></div>
+    <div class="stat"><div class="stat__head"><div class="stat__icon warning"><i data-icon="percent"></i></div></div><div><div class="stat__label">میانگین حاشیه سود</div><div class="stat__value">۳۲٪</div></div><div class="stat__foot">نسبت به قیمت خرید</div></div>
+  </div>
+
+  <!-- Filters strip -->
+  <div class="card">
+    <div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+      <span class="text-sm text-muted">فیلتر سریع:</span>
+      <button class="pill is-active">همه (۱۲۸)</button>
+      <button class="pill">فعال (۱۱۴)</button>
+      <button class="pill">غیرفعال (۱۴)</button>
+      <button class="pill">موجودی کم (۱۴)</button>
+      <button class="pill">پرفروش (۲۴)</button>
+      <div style="flex:1"></div>
+      <span class="chip"><i data-icon="tag" data-size="14"></i> دسته: کالای دیجیتال <button><i data-icon="x" data-size="12"></i></button></span>
+    </div>
+  </div>
+
+  <!-- Table view -->
+  <div id="tableView">
+    <div class="table-card" data-table='{
+      "dataSource":"products",
+      "pageSize":10,
+      "searchPlaceholder":"جستجوی محصول، کد، برند...",
+      "createText":"محصول جدید",
+      "createHref":"product-create.html",
+      "filters":true,
+      "columns":[
+        {"key":"name","label":"نام محصول","type":"product","sortable":true},
+        {"key":"sku","label":"کد کالا","type":"id","width":"120px"},
+        {"key":"category","label":"دسته‌بندی","width":"150px"},
+        {"key":"unit","label":"واحد","width":"100px"},
+        {"key":"price","label":"قیمت فروش","type":"money","width":"160px","sortable":true},
+        {"key":"stock","label":"موجودی","type":"num","width":"100px","sortable":true},
+        {"key":"status","label":"وضعیت","type":"badge","width":"130px","badges":{"active":{"label":"فعال","cls":"success"},"low":{"label":"موجودی کم","cls":"warning"},"over":{"label":"موجودی مازاد","cls":"info"},"inactive":{"label":"غیرفعال","cls":"neutral"}}},
+        {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"],"actionHrefs":{"view":"product-detail.html","edit":"product-create.html"}}
+      ]
+    }'></div>
+  </div>
+
+  <!-- Grid view (hidden) -->
+  <div id="gridView" class="hidden" style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;"></div>
+
+  <!-- Advanced filter drawer -->
+  <div class="drawer-backdrop" id="filterDrawer"></div>
+  <aside class="drawer" id="filterDrawerPanel">
+    <div class="drawer__header">
+      <span class="drawer__title"><i data-icon="sliders" data-size="20"></i> فیلتر پیشرفته</span>
+      <button class="icon-btn" data-drawer-close><i data-icon="x" data-size="20"></i></button>
+    </div>
+    <div class="drawer__body">
+      <div class="form-section">
+        <div class="field">
+          <label class="field-label">دسته‌بندی</label>
+          <div class="combo">
+            <button class="combo__trigger"><span class="combo__value placeholder">انتخاب کنید...</span><i data-icon="chevron-down" data-size="16" class="chev"></i></button>
+            <div class="combo__panel">
+              <div class="combo__search"><input type="text" placeholder="جستجو..."></div>
+              <div class="combo__list">
+                <div class="combo__opt"><span>کالای دیجیتال</span><i data-icon="check" data-size="16" class="check"></i></div>
+                <div class="combo__opt"><span>لوازم خانگی</span><i data-icon="check" data-size="16" class="check"></i></div>
+                <div class="combo__opt"><span>پوشاک</span><i data-icon="check" data-size="16" class="check"></i></div>
+                <div class="combo__opt"><span>مواد غذایی</span><i data-icon="check" data-size="16" class="check"></i></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">برند</label>
+          <select class="select"><option>همه برندها</option><option>سامسونگ</option><option>اپل</option><option>شیائومی</option></select>
+        </div>
+        <div class="field-row">
+          <div class="field"><label class="field-label">قیمت از</label><input class="input" placeholder="۰" type="number"></div>
+          <div class="field"><label class="field-label">تا</label><input class="input" placeholder="۱۰٬۰۰۰٬۰۰۰" type="number"></div>
+        </div>
+        <div class="field-row">
+          <div class="field"><label class="field-label">موجودی از</label><input class="input" placeholder="۰" type="number"></div>
+          <div class="field"><label class="field-label">تا</label><input class="input" placeholder="۵۰۰" type="number"></div>
+        </div>
+        <div class="field">
+          <label class="field-label">وضعیت موجودی</label>
+          <div class="flex gap-4 flex-wrap">
+            <label class="checkbox"><input type="checkbox" checked> همه</label>
+            <label class="checkbox"><input type="checkbox"> موجود</label>
+            <label class="checkbox"><input type="checkbox"> رو به اتمام</label>
+            <label class="checkbox"><input type="checkbox"> ناموجود</label>
+          </div>
+        </div>
+        <div class="field">
+          <label class="field-label">تاریخ ایجاد</label>
+          <div class="input-group"><span class="input-icon" data-icon="calendar"></span><input class="input" placeholder="۱۴۰۳/۰۱/۰۱ - ۱۴۰۳/۰۷/۱۲"></div>
+        </div>
+      </div>
+    </div>
+    <div class="drawer__footer">
+      <button class="btn btn-ghost">پاک کردن</button>
+      <button class="btn btn-primary" data-drawer-close>اعمال فیلترها</button>
+    </div>
+  </aside>
+
+  <!-- Delete confirmation modal -->
+  <div class="modal-backdrop" id="deleteModal">
+    <div class="modal modal--sm">
+      <div class="modal__header">
+        <div class="modal__title"><span class="icon danger"><i data-icon="trash"></i></span> حذف محصول</div>
+        <button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button>
+      </div>
+      <div class="modal__body"><p style="color:var(--text-secondary);font-size:14px;">آیا از حذف این محصول اطمینان دارید؟ این عملیات قابل بازگشت نیست.</p>
+        <div class="alert alert-warning mt-4"><span class="alert__icon"><i data-icon="alert"></i></span><div><div class="alert__title">توجه</div><div class="alert__body">در صورت حذف، تاریخچه تراکنش‌های این محصول حفظ خواهد شد.</div></div></div>
+      </div>
+      <div class="modal__footer">
+        <button class="btn btn-ghost" data-modal-close>انصراف</button>
+        <button class="btn btn-danger" data-modal-close id="confirmDelete"><i data-icon="trash" data-size="16"></i> بله، حذف کن</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  // Wire the filter button to open drawer
+  document.addEventListener('click', (e) => {
+    if (e.target.closest('[data-filters]')) {
+      UI.Drawer.open('filterDrawerPanel');
+    }
+  });
+  document.getElementById('filterDrawer').addEventListener('click', () => UI.Drawer.close('filterDrawerPanel'));
+  // confirm delete toast
+  document.getElementById('confirmDelete').addEventListener('click', () => {
+    UI.toast({ type:'success', title:'حذف شد', message:'محصول با موفقیت حذف شد.' });
+  });
+
+  // Grid view builder
+  function buildGrid() {
+    const view = document.getElementById('gridView');
+    if (!window.NOVEXA) return;
+    view.innerHTML = NOVEXA.products.slice(0,12).map(p => `
+      <div class="card is-clickable" onclick="location.href='product-detail.html'">
+        <div style="height:140px;background:linear-gradient(135deg,var(--color-primary-50),var(--surface-2));display:grid;place-items:center;">
+          <i data-icon="box" data-size="48" style="color:var(--color-primary);opacity:.5;"></i>
+        </div>
+        <div class="card__body">
+          <div class="flex justify-between items-start gap-2">
+            <span class="badge badge-${p.status==='low'?'warning':'success'}">${p.status==='low'?'کم':'فعال'}</span>
+            <span class="cell-id">${p.sku}</span>
+          </div>
+          <h4 style="margin-top:8px;font-size:14px;line-height:1.5;">${p.name}</h4>
+          <div class="text-xs text-muted mt-2">${p.brand} • ${p.category}</div>
+          <div class="divider"></div>
+          <div class="flex justify-between items-center">
+            <div><div class="text-xs text-muted">قیمت</div><div class="cell-money">${NOVEXA.faMoney(p.price)}<span class="currency">ت</span></div></div>
+            <div class="text-end"><div class="text-xs text-muted">موجودی</div><div class="num fw-600">${NOVEXA.toFa(p.stock)}</div></div>
+          </div>
+        </div>
+      </div>`).join('');
+    renderIcons(view);
+  }
+  if (window.NOVEXA) buildGrid();
+  else window.addEventListener('novexa:core-ready', buildGrid);
+
+  // View toggle
+  document.querySelectorAll('[data-view]').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('[data-view]').forEach(x=>x.classList.remove('is-active'));
+      b.classList.add('is-active');
+      const v = b.dataset.view;
+      document.getElementById('tableView').classList.toggle('hidden', v!=='table');
+      document.getElementById('gridView').classList.toggle('hidden', v!=='grid');
+      if (v==='grid') { document.getElementById('gridView').style.display='grid'; buildGrid(); }
+    });
+  });
+</script>
+</body>
+</html>

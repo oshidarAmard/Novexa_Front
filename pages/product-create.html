@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ایجاد محصول — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="product-create">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>ایجاد محصول جدید</h1>
+      <p>اطلاعات محصول را وارد کنید — موارد ستاره‌دار اجباری هستند</p>
+    </div>
+    <div class="page-head__actions">
+      <a class="btn btn-ghost" href="products.html"><i data-icon="arrow-right" data-size="18"></i> بازگشت به فهرست</a>
+      <button class="btn btn-outline"><i data-icon="save" data-size="18"></i> ذخیره پیش‌نویس</button>
+      <button class="btn btn-primary" id="saveBtn"><i data-icon="check" data-size="18"></i> ذخیره و انتشار</button>
+    </div>
+  </div>
+
+  <!-- Stepper -->
+  <div class="card"><div class="card__body">
+    <div class="stepper">
+      <div class="step is-active"><div class="step__num">۱</div><div class="step__label">اطلاعات پایه</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step__num">۲</div><div class="step__label">قیمت‌گذاری</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step__num">۳</div><div class="step__label">انبار و موجودی</div></div>
+      <div class="step-line"></div>
+      <div class="step"><div class="step__num">۴</div><div class="step__label">تصاویر و پیوست</div></div>
+    </div>
+  </div></div>
+
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:24px;align-items:start;" class="form-layout">
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <!-- Section 1: Basic info -->
+      <div class="card">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="box"></i></span> اطلاعات پایه محصول</div></div>
+        <div class="card__body">
+          <div class="form-section">
+            <div class="field">
+              <label class="field-label">نام محصول <span class="req">*</span></label>
+              <input class="input" placeholder="مثال: گوشی هوشمند سامسونگ Galaxy S24 Ultra">
+              <div class="field-help">نام باید دقیق و شامل برند و مدل باشد.</div>
+            </div>
+            <div class="form-grid">
+              <div class="field"><label class="field-label">کد محصول <span class="req">*</span></label><input class="input" value="NV-۱۰۰۴۹" readonly style="background:var(--surface-2);"></div>
+              <div class="field"><label class="field-label">بارکد (SKU)</label><div class="input-group"><input class="input" placeholder="۶۲۶۰..."><button class="input-affix"><i data-icon="refresh" data-size="16"></i></button></div></div>
+              <div class="field"><label class="field-label">دسته‌بندی <span class="req">*</span></label>
+                <select class="select"><option>کالای دیجیتال</option><option>موبایل و تبلت</option><option>لپ‌تاپ</option><option>لوازم خانگی</option></select>
+              </div>
+              <div class="field"><label class="field-label">برند <span class="req">*</span></label>
+                <select class="select"><option>سامسونگ</option><option>اپل</option><option>شیائومی</option></select>
+              </div>
+              <div class="field"><label class="field-label">واحد اندازه‌گیری <span class="req">*</span></label><select class="select"><option>عدد</option><option>کیلوگرم</option><option>جعبه</option></select></div>
+              <div class="field"><label class="field-label">نوع محصول</label><select class="select"><option>کالا</option><option>خدمات</option><option>مجازی</option></select></div>
+            </div>
+            <div class="field"><label class="field-label">توضیحات کوتاه</label><textarea class="textarea" placeholder="توضیح مختصر درباره محصول..."></textarea></div>
+            <div class="field"><label class="field-label">توضیحات کامل</label><textarea class="textarea" style="min-height:140px;" placeholder="مشخصات فنی، ویژگی‌ها و توضیحات کامل..."></textarea></div>
+            <div class="field">
+              <label class="field-label">برچسب‌ها</label>
+              <div class="multiselect">
+                <span class="chip">پرفروش <button><i data-icon="x" data-size="12"></i></button></span>
+                <span class="chip">جدید <button><i data-icon="x" data-size="12"></i></button></span>
+                <span class="chip">تخفیف <button><i data-icon="x" data-size="12"></i></button></span>
+                <input placeholder="افزودن برچسب...">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Pricing -->
+      <div class="card">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="dollar"></i></span> قیمت‌گذاری و مالیات</div></div>
+        <div class="card__body">
+          <div class="form-grid cols-3">
+            <div class="field"><label class="field-label">قیمت خرید <span class="req">*</span></label><div class="input-affixed"><span class="input-prefix">تومان</span><input class="input" placeholder="۰" type="number"></div></div>
+            <div class="field"><label class="field-label">هزینه جانبی</label><div class="input-affixed"><span class="input-prefix">تومان</span><input class="input" placeholder="۰" type="number"></div></div>
+            <div class="field"><label class="field-label">قیمت تمام‌شده</label><div class="input-affixed"><span class="input-prefix">تومان</span><input class="input" value="۱۸٬۵۰۰٬۰۰۰" readonly style="background:var(--surface-2);"></div></div>
+            <div class="field"><label class="field-label">حاشیه سود</label><div class="input-affixed"><span class="input-suffix">٪</span><input class="input" value="۳۵"></div></div>
+            <div class="field"><label class="field-label">قیمت فروش <span class="req">*</span></label><div class="input-affixed"><span class="input-prefix">تومان</span><input class="input" value="۲۴٬۹۷۵٬۰۰۰"></div></div>
+            <div class="field"><label class="field-label">قیمت مصرف‌کننده</label><div class="input-affixed"><span class="input-prefix">تومان</span><input class="input" value="۲۷٬۵۰۰٬۰۰۰"></div></div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label class="field-label">مالیات بر ارزش افزوده</label>
+              <label class="switch"><input type="checkbox" checked><span class="switch__track"></span><span style="font-size:14px;">مشمول مالیات (۹٪)</span></label>
+            </div>
+            <div class="field"><label class="field-label">تخفیف پیش‌فرض</label><div class="input-affixed"><span class="input-suffix">٪</span><input class="input" value="۵"></div></div>
+          </div>
+          <div class="alert alert-info"><span class="alert__icon"><i data-icon="info"></i></span><div><div class="alert__title">نکته قیمت‌گذاری</div><div class="alert__body">قیمت تمام‌شده به‌صورت خودکار از مجموع قیمت خرید و هزینه‌های جانبی محاسبه می‌شود.</div></div></div>
+        </div>
+      </div>
+
+      <!-- Section 3: Inventory -->
+      <div class="card">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="warehouse"></i></span> انبار و موجودی</div></div>
+        <div class="card__body">
+          <div class="form-grid cols-3">
+            <div class="field"><label class="field-label">انبار اصلی <span class="req">*</span></label><select class="select"><option>انبار مرکزی تهران</option><option>انبار پردیس</option><option>انبار شیراز</option></select></div>
+            <div class="field"><label class="field-label">موجودی اولیه</label><input class="input" type="number" value="۱۲۰"></div>
+            <div class="field"><label class="field-label">حداقل موجودی</label><input class="input" type="number" value="۲۰"></div>
+            <div class="field"><label class="field-label">حداکثر موجودی</label><input class="input" type="number" value="۵۰۰"></div>
+            <div class="field"><label class="field-label">نقطه سفارش</label><input class="input" type="number" value="۴۰"></div>
+            <div class="field"><label class="field-label">مکان قفسه</label><input class="input" placeholder="مثال: A-12-3" value="A-12-3"></div>
+          </div>
+          <div class="field">
+            <label class="field-label">تنظیمات موجودی</label>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <label class="switch"><input type="checkbox" checked><span class="switch__track"></span><span style="font-size:14px;">ردیابی موجودی فعال باشد</span></label>
+              <label class="switch"><input type="checkbox" checked><span class="switch__track"></span><span style="font-size:14px;">هشدار کاهش موجودی</span></label>
+              <label class="switch"><input type="checkbox"><span class="switch__track"></span><span style="font-size:14px;">اجازه فروش بیشتر از موجودی</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar column -->
+    <div style="display:flex;flex-direction:column;gap:24px;position:sticky;top:84px;">
+      <!-- Status -->
+      <div class="card">
+        <div class="card__header"><div class="card__title"><i data-icon="settings" data-size="18"></i> وضعیت انتشار</div></div>
+        <div class="card__body">
+          <div class="field"><label class="field-label">وضعیت</label>
+            <select class="select"><option>فعال</option><option>پیش‌نویس</option><option>غیرفعال</option></select>
+          </div>
+          <div class="field"><label class="field-label">نمایش در فروشگاه</label><label class="switch"><input type="checkbox" checked><span class="switch__track"></span><span style="font-size:14px;">قابل مشاهده</span></label></div>
+          <div class="field"><label class="field-label">اولویت نمایش</label><select class="select"><option>عادی</option><option>ویژه</option><option>پیشنهاد ویژه</option></select></div>
+        </div>
+      </div>
+      <!-- Image upload -->
+      <div class="card">
+        <div class="card__header"><div class="card__title"><i data-icon="image" data-size="18"></i> تصویر محصول</div></div>
+        <div class="card__body">
+          <div class="upload">
+            <span class="upload__icon"><i data-icon="image-plus"></i></span>
+            <div class="upload__title">تصویر را اینجا بکشید</div>
+            <div class="upload__hint">یا برای انتخاب کلیک کنید • JPG, PNG حداکثر ۵MB</div>
+          </div>
+        </div>
+      </div>
+      <!-- Variants -->
+      <div class="card">
+        <div class="card__header"><div class="card__title"><i data-icon="layers" data-size="18"></i> انواع (Variant)</div></div>
+        <div class="card__body">
+          <label class="switch mb-4"><input type="checkbox"><span class="switch__track"></span><span style="font-size:14px;">این محصول چند نوع دارد</span></label>
+          <p class="text-sm text-muted">رنگ، سایز، حافظه و...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer action bar -->
+  <div class="form-footer">
+    <div class="text-sm text-muted"><i data-icon="info" data-size="14" style="vertical-align:middle;"></i> تغییرات تا فشردن دکمه ذخیره اعمال نمی‌شوند.</div>
+    <div class="flex gap-2">
+      <a class="btn btn-ghost" href="products.html">انصراف</a>
+      <button class="btn btn-outline"><i data-icon="save" data-size="16"></i> ذخیره و ادامه</button>
+      <button class="btn btn-primary" id="saveBtn2"><i data-icon="check" data-size="16"></i> ذخیره محصول</button>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function onSave() {
+    UI.toast({ type:'success', title:'محصول ذخیره شد', message:'محصول «گوشی سامسونگ Galaxy S24» با موفقیت ایجاد شد.' });
+    setTimeout(()=>location.href='products.html', 1400);
+  }
+  document.getElementById('saveBtn').addEventListener('click', onSave);
+  document.getElementById('saveBtn2').addEventListener('click', onSave);
+
+  // responsive form layout
+  if (window.matchMedia('(max-width:1024px)').matches) {
+    document.querySelector('.form-layout').style.gridTemplateColumns = '1fr';
+  }
+</script>
+</body>
+</html>

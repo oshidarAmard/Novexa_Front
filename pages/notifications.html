@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>اعلان‌ها — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="notifications">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مرکز اعلان‌ها</h1>
+      <p>همه اعلان‌ها، هشدارها و پیام‌های سیستم</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="check" data-size="18"></i> علامت‌گذاری همه</button>
+      <button class="btn btn-outline"><i data-icon="settings" data-size="18"></i> تنظیمات اعلان</button>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:260px 1fr;gap:24px;align-items:start;">
+    <div>
+      <div class="card"><div class="card__body" style="padding:8px;">
+        <a class="settings-nav__item is-active"><i data-icon="bell"></i> همه اعلان‌ها <span class="badge badge-neutral no-dot" style="margin-inline-start:auto;">۸</span></a>
+        <a class="settings-nav__item"><i data-icon="package"></i> انبار <span class="badge badge-neutral no-dot" style="margin-inline-start:auto;">۳</span></a>
+        <a class="settings-nav__item"><i data-icon="shopping"></i> فروش <span class="badge badge-neutral no-dot" style="margin-inline-start:auto;">۲</span></a>
+        <a class="settings-nav__item"><i data-icon="dollar"></i> مالی <span class="badge badge-neutral no-dot" style="margin-inline-start:auto;">۱</span></a>
+        <a class="settings-nav__item"><i data-icon="shield"></i> امنیت <span class="badge badge-neutral no-dot" style="margin-inline-start:auto;">۱</span></a>
+        <a class="settings-nav__item"><i data-icon="chart"></i> گزارش‌ها <span class="badge badge-neutral no-dot" style="margin-inline-start:auto;">۱</span></a>
+        <div class="divider"></div>
+        <a class="settings-nav__item"><i data-icon="bookmark"></i> نشان‌شده‌ها</a>
+        <a class="settings-nav__item"><i data-icon="archive"></i> بایگانی</a>
+      </div></div>
+      <div class="card mt-4"><div class="card__header"><div class="card__title"><i data-icon="trend-up" data-size="18"></i> آمار هفته</div></div>
+        <div class="card__body" style="display:flex;flex-direction:column;gap:10px;">
+          <div class="flex justify-between"><span class="text-sm text-muted">کل:</span><b class="num">۸۴</b></div>
+          <div class="flex justify-between"><span class="text-sm text-muted">خوانده‌شده:</span><b class="num text-success">۶۲</b></div>
+          <div class="flex justify-between"><span class="text-sm text-muted">خوانده‌نشده:</span><b class="num text-warning">۲۲</b></div>
+          <div class="flex justify-between"><span class="text-sm text-muted">حساس:</span><b class="num text-danger">۳</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__header"><div class="card__title">اعلان‌های اخیر</div>
+        <div class="pills"><button class="pill is-active">همه</button><button class="pill">خوانده‌نشده</button></div>
+      </div>
+      <div class="card__body flush" id="notifList"></div>
+      <div class="card__footer" style="justify-content:center;background:var(--surface);"><button class="btn btn-text">بارگذاری بیشتر <i data-icon="chevron-down" data-size="16"></i></button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.Icon)return;
+    const colorMap={primary:'var(--color-primary-50);color:var(--color-primary)',success:'var(--success-50);color:var(--success)',warning:'var(--warning-50);color:var(--warning)',danger:'var(--danger-50);color:var(--danger)',info:'var(--info-50);color:var(--info)'};
+    document.getElementById('notifList').innerHTML=NOVEXA.NOTIFS.concat(NOVEXA.NOTIFS).map(n=>`
+      <div class="notif-item ${n.unread?'unread':''}">
+        <div class="notif-item__icon" style="background:${colorMap[n.color]}">${Icon(n.icon,18)}</div>
+        <div style="flex:1;min-width:0;">
+          <div class="flex justify-between items-start gap-2">
+            <div style="font-weight:600;font-size:14px;">${n.title}</div>
+            <span class="text-xs text-faint">${n.time}</span>
+          </div>
+          <div style="font-size:13px;color:var(--text-secondary);margin-top:4px;">${n.body}</div>
+          <div class="flex gap-2 mt-3">
+            <span class="tag">${n.cat}</span>
+            <button class="btn btn-text btn-xs">مشاهده</button>
+            <button class="btn btn-text btn-xs">بایگانی</button>
+          </div>
+        </div>
+      </div>`).join('');
+    renderIcons(document.getElementById('notifList'));
+  }
+  if(window.NOVEXA)build();else window.addEventListener('novexa:core-ready',build);
+</script>
+</body>
+</html>

@@ -1,0 +1,177 @@
+/* ============================================================
+   NOVEXA ERP — TABLES (tables.css)
+   Enterprise Data Tables
+   ============================================================ */
+
+/* ---------- 1. Table Card (wrapper) ---------- */
+.table-card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  box-shadow:var(--shadow-xs);
+  overflow:hidden;
+}
+
+/* ---------- 2. Toolbar ---------- */
+.table-toolbar{
+  display:flex; align-items:center; gap:var(--space-3);
+  padding:var(--space-4);
+  border-bottom:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.table-toolbar__search{
+  display:flex; align-items:center; gap:var(--space-2);
+  background:var(--surface-2);
+  border:1px solid transparent;
+  border-radius:var(--radius-md);
+  padding:0 var(--space-3);
+  height:38px;
+  flex:1;
+  min-width:200px;
+  max-width:340px;
+  transition:all var(--t);
+}
+.table-toolbar__search:focus-within{
+  background:var(--surface); border-color:var(--color-primary);
+  box-shadow:0 0 0 3px var(--color-primary-100);
+}
+.table-toolbar__search svg{ width:16px;height:16px;color:var(--text-tertiary);flex-shrink:0; }
+.table-toolbar__search input{ border:none;background:none;outline:none;flex:1;font-size:var(--fs-sm);color:var(--text);min-width:0; }
+.table-toolbar__actions{ display:flex; gap:var(--space-2); align-items:center; flex-wrap:wrap; }
+
+/* Bulk bar */
+.bulk-bar{
+  display:none;
+  align-items:center; gap:var(--space-4);
+  padding:var(--space-3) var(--space-4);
+  background:var(--color-primary-50);
+  border-bottom:1px solid var(--color-primary-100);
+  font-size:var(--fs-sm);
+  color:var(--color-primary);
+  font-weight:600;
+}
+.bulk-bar.show{ display:flex; }
+.bulk-bar .actions{ display:flex; gap:var(--space-2); margin-inline-start:auto; }
+
+/* ---------- 3. Table wrapper ---------- */
+.table-wrap{ overflow-x:auto; }
+
+/* ---------- 4. The Table ---------- */
+table.data-table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  font-size:var(--fs-sm);
+}
+.data-table thead th{
+  position:sticky; top:0;
+  background:var(--surface-2);
+  color:var(--text-secondary);
+  font-weight:var(--fw-semibold);
+  font-size:var(--fs-xs);
+  text-transform:uppercase;
+  letter-spacing:.03em;
+  text-align:start;
+  padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+  z-index:1;
+}
+.data-table thead th.sortable{ cursor:pointer; user-select:none; }
+.data-table thead th.sortable:hover{ color:var(--text); }
+.data-table thead th .th-inner{ display:inline-flex; align-items:center; gap:var(--space-1); }
+.data-table thead th .sort-ic{ width:14px;height:14px; opacity:.4; }
+.data-table thead th.sorted-asc .sort-ic,
+.data-table thead th.sorted-desc .sort-ic{ opacity:1; color:var(--color-primary); }
+
+.data-table tbody td{
+  padding:var(--space-3) var(--space-4);
+  border-bottom:1px solid var(--border);
+  color:var(--text);
+  vertical-align:middle;
+}
+.data-table tbody tr{ transition:background var(--t-fast); }
+.data-table tbody tr:hover{ background:var(--surface-2); }
+.data-table tbody tr:last-child td{ border-bottom:none; }
+.data-table tbody tr.is-selected{ background:var(--color-primary-50); }
+.data-table tbody tr.is-selected:hover{ background:var(--color-primary-100); }
+
+/* Checkbox cell */
+.data-table .col-check{ width:44px; text-align:center !important; }
+.data-table .col-actions{ width:60px; text-align:center !important; }
+.data-table .col-num{ font-variant-numeric:tabular-nums; text-align:start; }
+
+/* Cell helpers */
+.cell-strong{ font-weight:var(--fw-semibold); color:var(--text); }
+.cell-sub{ font-size:var(--fs-xs); color:var(--text-tertiary); margin-top:1px; }
+.cell-id{ font-family:var(--font-family); color:var(--color-primary); font-weight:600; font-variant-numeric:tabular-nums; }
+.cell-money{ font-variant-numeric:tabular-nums; font-weight:600; }
+.cell-money .currency{ font-size:var(--fs-xs); color:var(--text-tertiary); font-weight:400; margin-inline-start:3px; }
+
+/* Row actions */
+.row-actions{ display:inline-flex; gap:2px; opacity:0; transition:opacity var(--t-fast); }
+tr:hover .row-actions{ opacity:1; }
+.row-action{
+  width:30px; height:30px;
+  display:grid; place-items:center;
+  border-radius:var(--radius-sm);
+  color:var(--text-tertiary);
+  transition:all var(--t-fast);
+}
+.row-action:hover{ background:var(--surface-3); color:var(--text); }
+.row-action.danger:hover{ background:var(--danger-50); color:var(--danger); }
+.row-action svg{ width:16px; height:16px; }
+
+/* ---------- 5. Pagination ---------- */
+.pagination{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:var(--space-3);
+  padding:var(--space-4);
+  border-top:1px solid var(--border);
+  flex-wrap:wrap;
+}
+.pagination__info{ font-size:var(--fs-sm); color:var(--text-secondary); }
+.pagination__nav{ display:flex; gap:var(--space-1); align-items:center; }
+.page-btn{
+  min-width:34px; height:34px; padding:0 var(--space-2);
+  display:inline-grid; place-items:center;
+  border-radius:var(--radius);
+  font-size:var(--fs-sm);
+  font-weight:var(--fw-medium);
+  color:var(--text-secondary);
+  border:1px solid transparent;
+  transition:all var(--t-fast);
+}
+.page-btn:hover:not(:disabled){ background:var(--surface-2); color:var(--text); }
+.page-btn.is-active{ background:var(--color-primary); color:#fff; }
+.page-btn:disabled{ opacity:.4; cursor:not-allowed; }
+.page-btn svg{ width:16px; height:16px; }
+
+/* size select */
+.page-size{ display:inline-flex; align-items:center; gap:var(--space-2); font-size:var(--fs-sm); color:var(--text-secondary); }
+
+/* ---------- 6. Inline checkbox ---------- */
+.chk{
+  appearance:none;
+  width:18px; height:18px;
+  border:1.5px solid var(--border-strong);
+  border-radius:var(--radius-xs);
+  cursor:pointer;
+  display:inline-grid; place-items:center;
+  background:var(--surface);
+  transition:all var(--t-fast);
+  flex-shrink:0;
+  vertical-align:middle;
+}
+.chk:checked{ background:var(--color-primary); border-color:var(--color-primary); }
+.chk:checked::after{
+  content:""; width:10px; height:6px;
+  border-inline-start:2px solid #fff; border-bottom:2px solid #fff;
+  transform:rotate(-45deg) translateY(-1px);
+}
+.chk:indeterminate{ background:var(--color-primary); border-color:var(--color-primary); }
+.chk:indeterminate::after{ content:""; width:10px; height:2px; background:#fff; }
+
+/* ---------- 7. Loading & Empty inside table ---------- */
+.table-loading .skeleton-row td{ height:52px; }
+.table-loading .skeleton{ height:14px; }

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>موجودی انبار — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="inventory">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>موجودی انبار</h1>
+      <p>گزارش لحظه‌ای موجودی همه انبارها</p>
+    </div>
+    <div class="page-head__actions">
+      <select class="select input-sm" style="width:auto;"><option>همه انبارها</option><option>انبار مرکزی تهران</option><option>انبار پردیس</option></select>
+      <button class="btn btn-outline"><i data-icon="sliders" data-size="18"></i> <span class="hide-mobile">فیلتر</span></button>
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <a class="btn btn-primary" href="stock-transfer.html"><i data-icon="move" data-size="18"></i> انتقال کالا</a>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="layers"></i></div><div><div class="stat__label">کل اقلام</div><div class="stat__value">۸۵۴</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">موجود</div><div class="stat__value">۷۸۲</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="alert"></i></div><div><div class="stat__label">رو به اتمام</div><div class="stat__value">۳۸</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="x"></i></div><div><div class="stat__label">ناموجود</div><div class="stat__value">۳۴</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="dollar"></i></div><div><div class="stat__label">ارزش کل</div><div class="stat__value">۸٫۹م‌ت</div></div></div>
+  </div>
+
+  <div class="table-card" data-table='{"dataSource":"products","pageSize":10,"searchPlaceholder":"جستجوی کالا...","createBtn":false,"filters":true,"columns":[
+    {"key":"name","label":"محصول","type":"product"},
+    {"key":"sku","label":"کد","type":"id","width":"110px"},
+    {"key":"unit","label":"واحد","width":"90px"},
+    {"key":"stock","label":"موجودی فعلی","type":"num","width":"120px","sortable":true},
+    {"key":"minStock","label":"حداقل","type":"num","width":"100px"},
+    {"key":"cost","label":"ارزش واحد","type":"money","width":"150px"},
+    {"key":"status","label":"وضعیت","type":"badge","width":"130px","badges":{"active":{"label":"موجود","cls":"success"},"low":{"label":"رو به اتمام","cls":"warning"},"over":{"label":"مازاد","cls":"info"}}}
+  ]}'></div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

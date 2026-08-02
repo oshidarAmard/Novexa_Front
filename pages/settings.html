@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تنظیمات — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="settings">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>تنظیمات سیستم</h1>
+      <p>پیکربندی سامانه و ترجیحات سازمان</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-primary" id="save"><i data-icon="save" data-size="18"></i> ذخیره تغییرات</button>
+    </div>
+  </div>
+
+  <div class="settings-layout">
+    <!-- Settings nav -->
+    <aside class="settings-nav">
+      <a class="settings-nav__item is-active" data-target="sec-company"><i data-icon="building"></i> اطلاعات شرکت</a>
+      <a class="settings-nav__item" data-target="sec-appearance"><i data-icon="palette"></i> ظاهر و تم</a>
+      <a class="settings-nav__item" data-target="sec-localization"><i data-icon="globe"></i> محلی‌سازی</a>
+      <a class="settings-nav__item" data-target="sec-notif"><i data-icon="bell"></i> اعلان‌ها</a>
+      <a class="settings-nav__item" data-target="sec-company"><i data-icon="lock"></i> امنیت</a>
+      <a class="settings-nav__item" data-target="sec-notif"><i data-icon="mail"></i> ایمیل و SMS</a>
+      <a class="settings-nav__item" data-target="sec-company"><i data-icon="cloud"></i> یکپارچگی و API</a>
+      <a class="settings-nav__item" data-target="sec-company"><i data-icon="database"></i> پشتیبان‌گیری</a>
+      <a class="settings-nav__item" data-target="sec-company"><i data-icon="credit"></i> مالیات و ارز</a>
+      <a class="settings-nav__item" data-target="sec-company"><i data-icon="code"></i> توسعه‌پذیری</a>
+    </aside>
+
+    <div style="display:flex;flex-direction:column;gap:24px;">
+      <!-- Company info -->
+      <div class="card" id="sec-company">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="building"></i></span> اطلاعات شرکت</div></div>
+        <div class="card__body">
+          <div class="form-grid cols-3">
+            <div class="field span-2"><label class="field-label">نام شرکت <span class="req">*</span></label><input class="input" value="شرکت نوواکسا سامانه پیشرو"></div>
+            <div class="field"><label class="field-label">نام تجاری</label><input class="input" value="نوواکسا ERP"></div>
+            <div class="field"><label class="field-label">کد اقتصادی</label><input class="input" value="۴۱۲۰۵۸۷۴۹۳۲"></div>
+            <div class="field"><label class="field-label">شناسه ملی</label><input class="input" value="۱۴۰۰۸۷۶۲۳۴۵"></div>
+            <div class="field"><label class="field-label">شماره ثبت</label><input class="input" value="۵۸۲۴۹۱"></div>
+          </div>
+          <div class="field"><label class="field-label">آدرس</label><textarea class="textarea">تهران، خیابان ولیعصر، بالاتر از میدان ونک، برج نوواکسا، طبقه ۱۲</textarea></div>
+          <div class="form-grid cols-3">
+            <div class="field"><label class="field-label">تلفن</label><input class="input" value="۰۲۱-۸۸۱۲۳۴۵۶"></div>
+            <div class="field"><label class="field-label">ایمیل</label><input class="input" value="info@novexa.ir"></div>
+            <div class="field"><label class="field-label">وب‌سایت</label><input class="input" value="novexa.ir"></div>
+          </div>
+          <div class="field"><label class="field-label">لوگوی شرکت</label>
+            <div class="upload" style="flex-direction:row;padding:16px;"><span class="upload__icon"><i data-icon="image"></i></span><div><div class="upload__title">تغییر لوگو</div><div class="upload__hint">PNG, SVG حداکثر ۲MB • ابعاد ۲۵۶×۲۵۶</div></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Appearance -->
+      <div class="card" id="sec-appearance">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="palette"></i></span> ظاهر و تم</div></div>
+        <div class="card__body">
+          <div class="field"><label class="field-label">حالت رنگی</label>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+              <label style="border:2px solid var(--color-primary);border-radius:var(--radius-md);padding:12px;cursor:pointer;"><div style="background:#fff;height:60px;border-radius:8px;border:1px solid var(--border);"></div><div class="flex items-center gap-2 mt-2"><input type="radio" name="theme" checked> روشن</div></label>
+              <label style="border:2px solid var(--border);border-radius:var(--radius-md);padding:12px;cursor:pointer;"><div style="background:#0F172A;height:60px;border-radius:8px;"></div><div class="flex items-center gap-2 mt-2"><input type="radio" name="theme"> تیره</div></label>
+              <label style="border:2px solid var(--border);border-radius:var(--radius-md);padding:12px;cursor:pointer;"><div style="background:linear-gradient(90deg,#fff 50%,#0F172A 50%);height:60px;border-radius:8px;"></div><div class="flex items-center gap-2 mt-2"><input type="radio" name="theme"> خودکار</div></label>
+            </div>
+          </div>
+          <div class="form-grid">
+            <div class="field"><label class="field-label">رنگ اصلی</label><input class="input" type="color" value="#2563EB" style="height:42px;"></div>
+            <div class="field"><label class="field-label">اندازه فونت</label><select class="select"><option>کوچک</option><option selected>متوسط</option><option>بزرگ</option></select></div>
+          </div>
+          <div class="field"><label class="switch"><input type="checkbox" checked><span class="switch__track"></span><span style="font-size:14px;">انیمیشن‌های رابط کاربری</span></label></div>
+          <div class="field"><label class="switch"><input type="checkbox"><span class="switch__track"></span><span style="font-size:14px;">حالت فشرده (Compact)</span></label></div>
+        </div>
+      </div>
+
+      <!-- Localization -->
+      <div class="card" id="sec-localization">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="globe"></i></span> محلی‌سازی</div></div>
+        <div class="card__body">
+          <div class="form-grid cols-3">
+            <div class="field"><label class="field-label">زبان</label><select class="select"><option selected>فارسی</option><option>English</option><option>العربية</option></select></div>
+            <div class="field"><label class="field-label">تقویم</label><select class="select"><option selected>شمسی (جلالی)</option><option>میلادی</option><option>قمری</option></select></div>
+            <div class="field"><label class="field-label">منطقه زمانی</label><select class="select"><option>تهران (GMT+۳:۳۰)</option></select></div>
+            <div class="field"><label class="field-label">واحد پول</label><select class="select"><option selected>تومان (IRT)</option><option>ریال (IRR)</option><option>دلار (USD)</option></select></div>
+            <div class="field"><label class="field-label">فرمت تاریخ</label><select class="select"><option>۱۴۰۳/۰۷/۱۲</option><option>۱۲ تیر ۱۴۰۳</option></select></div>
+            <div class="field"><label class="field-label">شروع هفته</label><select class="select"><option selected>شنبه</option><option>یکشنبه</option><option>دوشنبه</option></select></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notification settings -->
+      <div class="card" id="sec-notif">
+        <div class="card__header"><div class="card__title"><span class="form-section__icon"><i data-icon="bell"></i></span> تنظیمات اعلان</div></div>
+        <div class="card__body">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <label class="flex justify-between items-center"><div><div class="fw-500" style="font-size:14px;">اعلان درون‌سامانه</div><div class="text-xs text-muted">نمایش اعلان در خود سامانه</div></div><label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label></label>
+            <label class="flex justify-between items-center"><div><div class="fw-500" style="font-size:14px;">اعلان ایمیل</div><div class="text-xs text-muted">ارسال اعلان‌ها به ایمیل</div></div><label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label></label>
+            <label class="flex justify-between items-center"><div><div class="fw-500" style="font-size:14px;">پیامک</div><div class="text-xs text-muted">ارسال پیامک برای رویدادهای حساس</div></div><label class="switch"><input type="checkbox"><span class="switch__track"></span></label></label>
+            <label class="flex justify-between items-center"><div><div class="fw-500" style="font-size:14px;">صدای اعلان</div><div class="text-xs text-muted">پخش صدا هنگام دریافت اعلان جدید</div></div><label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label></label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  // Settings nav: smooth-scroll to section + active state
+  const navItems = document.querySelectorAll('.settings-nav__item');
+  navItems.forEach(item => {
+    item.style.cursor = 'pointer';
+    item.addEventListener('click', () => {
+      navItems.forEach(i => i.classList.remove('is-active'));
+      item.classList.add('is-active');
+      const targetId = item.getAttribute('data-target');
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // brief highlight
+        target.style.transition = 'box-shadow .4s';
+        target.style.boxShadow = '0 0 0 2px var(--color-primary)';
+        setTimeout(() => { target.style.boxShadow = ''; }, 1200);
+      }
+      // On mobile, collapse the nav after pick
+      if (window.matchMedia('(max-width:1024px)').matches) {
+        document.querySelector('.settings-nav')?.scrollIntoView({behavior:'smooth'});
+      }
+    });
+  });
+
+  // Highlight active section on scroll (scroll-spy)
+  const sections = ['sec-company','sec-appearance','sec-localization','sec-notif']
+    .map(id => document.getElementById(id)).filter(Boolean);
+  let _spy;
+  window.addEventListener('scroll', () => {
+    clearTimeout(_spy);
+    _spy = setTimeout(() => {
+      const y = window.scrollY + 140;
+      let current = sections[0];
+      sections.forEach(s => { if (s.offsetTop <= y) current = s; });
+      if (current) {
+        navItems.forEach(i => i.classList.toggle('is-active', i.getAttribute('data-target') === current.id));
+      }
+    }, 80);
+  }, { passive: true });
+
+  // Theme picker preview (live)
+  document.querySelectorAll('input[name="theme"]').forEach(r => {
+    r.addEventListener('change', () => {
+      const parent = r.closest('label');
+      document.querySelectorAll('.settings-layout .card label').forEach(l => l.style.borderColor = 'var(--border)');
+      if (parent) parent.style.borderColor = 'var(--color-primary)';
+    });
+  });
+
+  document.getElementById('save').addEventListener('click', () => UI.toast({type:'success', title:'ذخیره شد', message:'تنظیمات سیستم به‌روزرسانی شد.'}));
+</script>
+</body>
+</html>

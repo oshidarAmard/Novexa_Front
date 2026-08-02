@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مشتریان — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="customers">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مشتریان</h1>
+      <p>پایگاه داده مشتریان حقیقی و حقوقی — ۲٬۴۸۶ مشتری فعال</p>
+    </div>
+    <div class="page-head__actions">
+      <div class="segment">
+        <button class="is-active" data-view="table"><i data-icon="list" data-size="16"></i> جدول</button>
+        <button data-view="grid"><i data-icon="grid" data-size="16"></i> کارتی</button>
+      </div>
+      <button class="btn btn-outline"><i data-icon="upload" data-size="18"></i> <span class="hide-mobile">ورودی</span></button>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> مشتری جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="users"></i></div><div><div class="stat__label">کل مشتریان</div><div class="stat__value">۲٬۴۸۶</div></div><div class="stat__foot"><span class="trend up">+۵٫۶٪</span></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="user"></i></div><div><div class="stat__label">حقیقی</div><div class="stat__value">۱٬۶۲۰</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="building"></i></div><div><div class="stat__label">حقوقی</div><div class="stat__value">۸۶۶</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="dollar"></i></div><div><div class="stat__label">طلب از مشتری</div><div class="stat__value">۲٫۱م‌ت</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="alert"></i></div><div><div class="stat__label">معوق</div><div class="stat__value">۲۴</div></div></div>
+  </div>
+
+  <div id="tableView">
+    <div class="table-card" data-table='{"dataSource":"customers","pageSize":10,"searchPlaceholder":"جستجوی نام، کد، تلفن...","filters":true,"columns":[
+      {"key":"name","label":"مشتری","type":"custom","render":(v,r)=>`<div style="display:flex;align-items:center;gap:10px;"><span class="avatar avatar-sm">${NOVEXA.initials(v)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code} • ${r.type}</div></div></div>`},
+      {"key":"phone","label":"تلفن"},
+      {"key":"city","label":"شهر","width":"110px"},
+      {"key":"orders","label":"سفارشات","type":"num","width":"100px","sortable":true},
+      {"key":"balance","label":"مانده حساب","type":"money","width":"170px","sortable":true},
+      {"key":"status","label":"وضعیت","type":"badge","width":"120px","badges":{"active":{"label":"فعال","cls":"success"},"inactive":{"label":"غیرفعال","cls":"neutral"}}},
+      {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"]}
+    ]}'></div>
+  </div>
+
+  <div id="gridView" class="hidden"></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="user" data-size="20"></i> مشتری جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">نوع مشتری</label><div class="segment"><button class="is-active">حقیقی</button><button>حقوقی</button></div></div>
+          <div class="field"><label class="field-label">نام <span class="req">*</span></label><input class="input" placeholder="نام و نام خانوادگی"></div>
+          <div class="field"><label class="field-label">کد مشتری</label><input class="input" value="C-۱۲۳۷" readonly style="background:var(--surface-2);"></div>
+        </div>
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">تلفن همراه <span class="req">*</span></label><div class="input-group"><span class="input-icon" data-icon="phone"></span><input class="input" placeholder="۰۹۱۲..."></div></div>
+          <div class="field"><label class="field-label">ایمیل</label><div class="input-group"><span class="input-icon" data-icon="mail"></span><input class="input" placeholder="name@mail.com"></div></div>
+          <div class="field"><label class="field-label">کد ملی</label><input class="input" placeholder="۰۰۰..."></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">شهر</label><select class="select"><option>تهران</option><option>مشهد</option><option>اصفهان</option></select></div>
+          <div class="field"><label class="field-label">اعتبار خرید</label><div class="input-affixed"><span class="input-prefix">ت</span><input class="input" value="۱۰٬۰۰۰٬۰۰۰"></div></div>
+        </div>
+        <div class="field"><label class="field-label">آدرس کامل</label><textarea class="textarea" placeholder="استان، شهر، خیابان، پلاک..."></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'مشتری جدید ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت مشتری</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function buildGrid(){
+    if(!window.NOVEXA)return;
+    const v=document.getElementById('gridView');
+    v.style.display='grid'; v.style.gridTemplateColumns='repeat(4,1fr)'; v.style.gap='16px';
+    v.innerHTML=NOVEXA.customers.slice(0,12).map(c=>`
+      <div class="card is-clickable">
+        <div class="card__body" style="text-align:center;">
+          <div class="avatar avatar-lg" style="margin:0 auto;">${NOVEXA.initials(c.name)}</div>
+          <h4 style="margin-top:12px;font-size:14px;">${c.name}</h4>
+          <div class="text-xs text-muted mt-1">${c.code} • ${c.type}</div>
+          <div class="flex justify-center gap-2 mt-2">
+            <span class="badge badge-${c.status==='active'?'success':'neutral'}">${c.status==='active'?'فعال':'غیرفعال'}</span>
+            <span class="badge badge-info no-dot">${c.city}</span>
+          </div>
+          <div class="divider"></div>
+          <div class="flex justify-between text-sm">
+            <div><div class="text-xs text-muted">سفارشات</div><div class="fw-600 num">${NOVEXA.toFa(c.orders)}</div></div>
+            <div><div class="text-xs text-muted">مانده</div><div class="fw-600 num">${NOVEXA.faMoney(c.balance)}</div></div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+  if(window.NOVEXA)buildGrid();else window.addEventListener('novexa:core-ready',buildGrid);
+
+  document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-view]').forEach(x=>x.classList.remove('is-active')); b.classList.add('is-active');
+    const v=b.dataset.view;
+    document.getElementById('tableView').classList.toggle('hidden',v!=='table');
+    document.getElementById('gridView').classList.toggle('hidden',v!=='grid');
+    if(v==='grid')buildGrid();
+  }));
+</script>
+</body>
+</html>

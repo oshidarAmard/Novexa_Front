@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>مرجوعی فروش — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="sales-return">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مرجوعی فروش</h1>
+      <p>مدیریت درخواست‌های بازگشت کالا از مشتری</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="refresh" data-size="18"></i> مرجوعی جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon danger"><i data-icon="trend-down"></i></div><div><div class="stat__label">مرجوعی این ماه</div><div class="stat__value">۶</div></div><div class="stat__foot"><span class="trend down">۲٪</span></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">در انتظار بررسی</div><div class="stat__value">۳</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">تأیید و بازگشت</div><div class="stat__value">۲</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="dollar"></i></div><div><div class="stat__label">ارزش مرجوعی</div><div class="stat__value">۱۲٫۴م‌ت</div></div></div>
+  </div>
+
+  <div id="tbl"></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="refresh" data-size="20"></i> ثبت مرجوعی</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid">
+          <div class="field"><label class="field-label">فاکتور مرجع <span class="req">*</span></label><select class="select"><option>INV-10284</option><option>INV-10280</option></select></div>
+          <div class="field"><label class="field-label">مشتری</label><input class="input" value="سارا محمدی" readonly style="background:var(--surface-2);"></div>
+        </div>
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">تاریخ درخواست</label><input class="input" value="۱۴۰۳/۰۷/۱۲"></div>
+          <div class="field"><label class="field-label">دلیل مرجوعی</label><select class="select"><option>کالای معیوب</option><option>عدم تطابق</option><option>تغییر نظر مشتری</option><option>سفارش اشتباه</option></select></div>
+          <div class="field"><label class="field-label">روش جبران</label><select class="select"><option>بازگشت وجه</option><option>کاهش فاکتور</option><option>تعویض کالا</option></select></div>
+        </div>
+        <h4 class="mt-6 mb-4">اقلام مرجوعی</h4>
+        <div class="table-card"><div class="table-wrap"><table class="data-table">
+          <thead><tr><th>محصول</th><th>تعداد خرید</th><th>تعداد مرجوعی</th><th>دلیل</th><th>مبلغ برگشتی</th></tr></thead>
+          <tbody>
+            <tr><td>گوشی سامسونگ Galaxy S24</td><td class="num">۲</td><td><input class="input input-sm" style="width:70px;" value="۱"></td><td><input class="input input-sm" placeholder="معیوب"></td><td class="cell-money">۲۴٫۹۷۵٫۰۰۰</td></tr>
+          </tbody>
+        </table></div></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ثبت شد',message:'درخواست مرجوعی ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت مرجوعی</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.UI)return;
+    const el=document.getElementById('tbl'); el.className='table-card';
+    const data=Array.from({length:12}).map((_,i)=>{
+      const st=NOVEXA.pick([{l:'در انتظار',c:'warning'},{l:'تأییدشده',c:'success'},{l:'ردشده',c:'danger'},{l:'در حال پردازش',c:'info'}]);
+      const reason=NOVEXA.pick(['کالای معیوب','عدم تطابق','تغییر نظر','سفارش اشتباه']);
+      return {id:'RET-'+NOVEXA.toFa(7000+i),inv:'INV-'+NOVEXA.toFa(10240+(i%40)),customer:Math.random()>0.5?NOVEXA.companyName():NOVEXA.fullName(),date:NOVEXA.faDate('۱۴۰۳/۰'+NOVEXA.toFa(1+(i%7))+'/'+NOVEXA.toFa(1+(i%28))),reason,amount:Math.floor(500000+Math.random()*25000000),status:st.l,statusCls:st.c};
+    });
+    UI.Table.create(el,{
+      data,pageSize:10,searchPlaceholder:'جستجوی مرجوعی...',createText:'مرجوعی جدید',createHref:'#',
+      columns:[
+        {key:'id',label:'شماره مرجوعی',type:'id',width:'130px'},
+        {key:'inv',label:'فاکتور',type:'id',width:'110px'},
+        {key:'customer',label:'مشتری'},
+        {key:'reason',label:'دلیل',width:'140px'},
+        {key:'amount',label:'مبلغ برگشتی',type:'money',width:'170px'},
+        {key:'date',label:'تاریخ',type:'date',width:'120px'},
+        {key:'status',label:'وضعیت',type:'custom',width:'130px',render:(v,r)=>`<span class="badge badge-${r.statusCls}">${v}</span>`},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+</script>
+</body>
+</html>

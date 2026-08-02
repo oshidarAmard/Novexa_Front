@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>نقش‌ها — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="roles">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>نقش‌های کاربری</h1>
+      <p>تعریف نقش‌ها و سطوح دسترسی گروهی</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> نقش جدید</button>
+    </div>
+  </div>
+
+  <div id="roleCards" style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;"></div>
+
+  <div class="card">
+    <div class="card__header"><div class="card__title"><i data-icon="shield" data-size="18"></i> ماتریس دسترسی نقش‌ها</div></div>
+    <div class="card__body flush">
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>ماژول / نقش</th><th class="col-check">مدیر سیستم</th><th class="col-check">مدیر فروش</th><th class="col-check">کارشناس انبار</th><th class="col-check">حسابدار</th></tr></thead>
+        <tbody id="permMatrix"></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal">
+      <div class="modal__header"><div class="modal__title"><i data-icon="shield" data-size="20"></i> نقش جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="field"><label class="field-label">نام نقش <span class="req">*</span></label><input class="input" placeholder="مثال: مدیر بازاریابی"></div>
+        <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea" placeholder="شرح مسئولیت‌های نقش..."></textarea></div>
+        <div class="field"><label class="field-label">کپی دسترسی از</label><select class="select"><option>— بدون الگو —</option><option>مدیر فروش</option><option>کارشناس انبار</option></select></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ایجاد شد',message:'نقش ایجاد شد. اکنون دسترسی‌ها را تنظیم کنید.'})"><i data-icon="check" data-size="16"></i> ایجاد و تنظیم دسترسی</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.Icon)return;
+    const roles=[
+      {name:'مدیر سیستم',icon:'shield',color:'primary',users:3,desc:'دسترسی کامل به همه ماژول‌ها'},
+      {name:'مدیر فروش',icon:'shopping',color:'success',users:8,desc:'مدیریت فروش و مشتریان'},
+      {name:'مدیر انبار',icon:'warehouse',color:'warning',users:5,desc:'مدیریت انبار و موجودی'},
+      {name:'مدیر مالی',icon:'calculator',color:'info',users:4,desc:'حسابداری و گزارش‌های مالی'},
+      {name:'کارشناس فروش',icon:'users',color:'primary',users:12,desc:'ثبت سفارش و پیگیری'},
+      {name:'کارشناس انبار',icon:'box',color:'violet',users:9,desc:'تراکنش‌های انبار'}
+    ];
+    document.getElementById('roleCards').innerHTML=roles.map(r=>`
+      <div class="card is-clickable">
+        <div class="card__body">
+          <div class="flex justify-between items-start">
+            <div class="stat__icon ${r.color}">${Icon(r.icon,22)}</div>
+            <span class="badge badge-neutral no-dot">${NOVEXA.toFa(r.users)} کاربر</span>
+          </div>
+          <h4 style="margin-top:12px;">${r.name}</h4>
+          <p class="text-sm text-muted mt-1">${r.desc}</p>
+          <div class="divider"></div>
+          <div class="flex gap-2">
+            <a href="permissions.html" class="btn btn-text btn-sm">دسترسی‌ها <i data-icon="arrow-left" data-size="14"></i></a>
+          </div>
+        </div>
+      </div>`).join('');
+    renderIcons(document.getElementById('roleCards'));
+
+    // permission matrix
+    const mods=['داشبورد','محصولات','انبار','خرید','فروش','مشتریان','مالی','گزارش‌ها','کاربران','تنظیمات'];
+    const perms={'مدیر سیستم':'full','مدیر فروش':'mix','کارشناس انبار':'limited','حسابدار':'limited'};
+    document.getElementById('permMatrix').innerHTML=mods.map(m=>{
+      return `<tr><td><div class="cell-strong">${m}</div></td>${
+        Object.keys(perms).map(r=>{
+          const p=perms[r];
+          let view=p==='none'?false:true;
+          let edit=p==='full'||(p==='mix'&&['محصولات','فروش','مشتریان'].includes(m));
+          let del=p==='full'&&m!=='تنظیمات';
+          return `<td class="col-check"><div class="flex gap-2 justify-center">
+            <input type="checkbox" class="chk" ${view?'checked':''} data-tooltip="مشاهده">
+            <input type="checkbox" class="chk" ${edit?'checked':''} data-tooltip="ویرایش">
+            <input type="checkbox" class="chk" ${del?'checked':''} data-tooltip="حذف">
+          </div></td>`;
+        }).join('')
+      }</tr>`;
+    }).join('');
+  }
+  if(window.NOVEXA)build();else window.addEventListener('novexa:core-ready',build);
+</script>
+</body>
+</html>

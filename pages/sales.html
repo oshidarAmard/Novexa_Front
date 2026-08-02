@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فروشات — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="sales">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>فروشات</h1>
+      <p>مدیریت سفارشات و فاکتورهای فروش</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <a class="btn btn-primary" href="sales-invoice.html"><i data-icon="plus" data-size="18"></i> فاکتور فروش</a>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="shopping"></i></div><div><div class="stat__label">فروش این ماه</div><div class="stat__value">۲٫۴م‌ت</div></div><div class="stat__foot"><span class="trend up">+۸٪</span></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">تحویل‌شده</div><div class="stat__value">۱۸۶</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="truck"></i></div><div><div class="stat__label">در حال ارسال</div><div class="stat__value">۳۲</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">در انتظار</div><div class="stat__value">۱۸</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="trend-down"></i></div><div><div class="stat__label">مرجوعی</div><div class="stat__value">۶</div></div></div>
+  </div>
+
+  <div class="card"><div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+    <span class="text-sm text-muted">وضعیت:</span>
+    <button class="pill is-active">همه</button>
+    <button class="pill">در انتظار</button>
+    <button class="pill">در حال پردازش</button>
+    <button class="pill">ارسال شده</button>
+    <button class="pill">تحویل شده</button>
+    <button class="pill">مرجوعی</button>
+  </div></div>
+
+  <div class="table-card" data-table='{"dataSource":"sales","pageSize":10,"searchPlaceholder":"جستجوی فاکتور فروش...","filters":true,"columns":[
+    {"key":"id","label":"شماره فاکتور","type":"id","width":"130px"},
+    {"key":"customer","label":"مشتری","type":"custom","render":(v)=>`<div style="display:flex;align-items:center;gap:8px;"><span class="avatar avatar-sm">${NOVEXA.initials(v)}</span><div><div class="cell-strong truncate" style="max-width:180px;">${v}</div></div></div>`},
+    {"key":"date","label":"تاریخ","type":"date","width":"120px"},
+    {"key":"items","label":"اقلام","type":"num","width":"80px"},
+    {"key":"total","label":"مبلغ کل","type":"money","width":"170px","sortable":true},
+    {"key":"channel","label":"کانال","type":"custom","width":"130px","render":(v)=>`<span class="badge badge-neutral no-dot">${v}</span>`},
+    {"key":"payment","label":"پرداخت","type":"custom","width":"110px","render":(v)=>`<span class="tag">${v}</span>`},
+    {"key":"statusLabel","label":"وضعیت","type":"badge","width":"130px","badges":{"در انتظار":{"label":"در انتظار","cls":"warning"},"در حال پردازش":{"label":"پردازش","cls":"info"},"ارسال شده":{"label":"ارسال","cls":"info"},"تحویل شده":{"label":"تحویل","cls":"success"},"مرجوع شده":{"label":"مرجوعی","cls":"danger"},"لغو شده":{"label":"لغو","cls":"neutral"}}},
+    {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"],"actionHrefs":{"view":"sales-invoice.html"}}
+  ]}'></div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

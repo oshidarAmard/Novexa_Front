@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پروفایل من — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="profile">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>پروفایل من</h1>
+      <p>مدیریت حساب کاربری و ترجیحات شخصی</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-primary" id="save"><i data-icon="save" data-size="18"></i> ذخیره تغییرات</button>
+    </div>
+  </div>
+
+  <div class="detail-hero">
+    <div class="avatar detail-hero__avatar online" style="font-size:28px;">م‌ر</div>
+    <div class="detail-hero__body">
+      <div class="detail-hero__name">میلاد رضایی <span class="badge badge-success">آنلاین</span></div>
+      <div class="detail-hero__meta">
+        <span><i data-icon="shield"></i> مدیر سیستم</span>
+        <span><i data-icon="mail"></i> milad.rezaei@novexa.ir</span>
+        <span><i data-icon="phone"></i> ۰۹۱۲۳۴۵۶۷۸۹</span>
+        <span><i data-icon="map"></i> تهران</span>
+        <span><i data-icon="calendar"></i> عضو از ۱۴۰۱/۰۳/۱۵</span>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <button class="btn btn-outline"><i data-icon="upload" data-size="16"></i> تغییر عکس</button>
+      <div class="dropdown"><button class="btn btn-ghost btn-icon" data-dropdown><i data-icon="more-v" data-size="18"></i></button>
+        <div class="dropdown__menu align-end"><div class="dropdown__item"><i data-icon="download"></i> دانلود داده‌های من</div><div class="dropdown__item danger"><i data-icon="trash"></i> حذف حساب</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="activity"></i></div><div><div class="stat__label">ورود این ماه</div><div class="stat__value">۲۴</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">عملیات انجام‌شده</div><div class="stat__value">۴۸۶</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="file"></i></div><div><div class="stat__label">فاکتورهای صدور</div><div class="stat__value">۸۲</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">آخرین ورود</div><div class="stat__value">۱۰ دقیقه</div></div></div>
+  </div>
+
+  <div class="card" data-tabs>
+    <div class="card__header flush" style="padding:0 16px;border-bottom:1px solid var(--border);">
+      <div class="tabs__nav" style="border:none;">
+        <button class="tab is-active" data-target="#tab-info">اطلاعات شخصی</button>
+        <button class="tab" data-target="#tab-sec">امنیت</button>
+        <button class="tab" data-target="#tab-pref">ترجیحات</button>
+        <button class="tab" data-target="#tab-sessions">نشست‌ها</button>
+        <button class="tab" data-target="#tab-activity">فعالیت‌ها</button>
+      </div>
+    </div>
+
+    <!-- Personal info -->
+    <div class="card__body tab-panel is-active" id="tab-info">
+      <div class="form-grid cols-3">
+        <div class="field"><label class="field-label">نام</label><input class="input" value="میلاد"></div>
+        <div class="field"><label class="field-label">نام خانوادگی</label><input class="input" value="رضایی"></div>
+        <div class="field"><label class="field-label">نام کاربری</label><input class="input" value="milad.rezaei"></div>
+        <div class="field"><label class="field-label">ایمیل</label><div class="input-group"><span class="input-icon" data-icon="mail"></span><input class="input" value="milad.rezaei@novexa.ir"></div></div>
+        <div class="field"><label class="field-label">تلفن</label><div class="input-group"><span class="input-icon" data-icon="phone"></span><input class="input" value="۰۹۱۲۳۴۵۶۷۸۹"></div></div>
+        <div class="field"><label class="field-label">سمت</label><input class="input" value="مدیر سیستم" readonly style="background:var(--surface-2);"></div>
+      </div>
+      <div class="form-grid">
+        <div class="field"><label class="field-label">شهر</label><select class="select"><option>تهران</option></select></div>
+        <div class="field"><label class="field-label">زبان ترجیحی</label><select class="select"><option>فارسی</option></select></div>
+      </div>
+      <div class="field"><label class="field-label">درباره من</label><textarea class="textarea">مدیر سیستم نوواکسا ERP با تخصص در پیاده‌سازی راهکارهای سازمانی.</textarea></div>
+    </div>
+
+    <!-- Security -->
+    <div class="card__body tab-panel" id="tab-sec">
+      <div class="card"><div class="card__body">
+        <h4 class="mb-4">تغییر رمز عبور</h4>
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">رمز فعلی</label><input class="input" type="password" placeholder="••••••"></div>
+          <div class="field"><label class="field-label">رمز جدید</label><input class="input" type="password" placeholder="••••••"></div>
+          <div class="field"><label class="field-label">تکرار رمز</label><input class="input" type="password" placeholder="••••••"></div>
+        </div>
+        <button class="btn btn-outline mt-2"><i data-icon="key" data-size="16"></i> به‌روزرسانی رمز</button>
+      </div></div>
+      <div class="card mt-4"><div class="card__body">
+        <h4 class="mb-4">احراز هویت دومرحله‌ای</h4>
+        <div class="flex justify-between items-center">
+          <div><div class="fw-500">تأیید هویت پیامکی</div><div class="text-xs text-muted">ارسال کد به شماره ۰۹۱۲***۶۷۸۹</div></div>
+          <label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label>
+        </div>
+        <div class="divider"></div>
+        <div class="flex justify-between items-center">
+          <div><div class="fw-500">برنامه احراز هویت (Google Authenticator)</div><div class="text-xs text-muted">کد ۶ رقمی از اپلیکیشن</div></div>
+          <label class="switch"><input type="checkbox"><span class="switch__track"></span></label>
+        </div>
+      </div></div>
+    </div>
+
+    <!-- Preferences -->
+    <div class="card__body tab-panel" id="tab-pref">
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div class="flex justify-between items-center"><div><div class="fw-500">اعلان ایمیلی</div><div class="text-xs text-muted">دریافت اعلان‌ها از طریق ایمیل</div></div><label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label></div>
+        <div class="flex justify-between items-center"><div><div class="fw-500">اعلان فروش جدید</div><div class="text-xs text-muted">هنگام ثبت فاکتور جدید مطلع شو</div></div><label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label></div>
+        <div class="flex justify-between items-center"><div><div class="fw-500">هشدار موجودی کم</div><div class="text-xs text-muted">موجودی کمتر از حد مجاز</div></div><label class="switch"><input type="checkbox" checked><span class="switch__track"></span></label></div>
+        <div class="flex justify-between items-center"><div><div class="fw-500">گزارش هفتگی</div><div class="text-xs text-muted">خلاصه عملکرد هر هفته</div></div><label class="switch"><input type="checkbox"><span class="switch__track"></span></label></div>
+      </div>
+    </div>
+
+    <!-- Sessions -->
+    <div class="card__body tab-panel" id="tab-sessions">
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="card"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+          <div class="stat__icon success"><i data-icon="cpu"></i></div>
+          <div style="flex:1;"><div class="fw-600">Chrome — ویندوز</div><div class="text-xs text-muted">تهران • همین لحظه • <span class="text-success">فعال</span></div></div>
+          <span class="badge badge-success">دستگاه فعلی</span>
+        </div></div>
+        <div class="card"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+          <div class="stat__icon info"><i data-icon="cpu"></i></div>
+          <div style="flex:1;"><div class="fw-600">Safari — آیفون</div><div class="text-xs text-muted">تهران • ۲ ساعت پیش</div></div>
+          <button class="btn btn-text btn-sm text-danger">خروج</button>
+        </div></div>
+        <div class="card"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+          <div class="stat__icon warning"><i data-icon="cpu"></i></div>
+          <div style="flex:1;"><div class="fw-600">Firefox — لینوکس</div><div class="text-xs text-muted">مشهد • دیروز، ۱۴:۲۰</div></div>
+          <button class="btn btn-text btn-sm text-danger">خروج</button>
+        </div></div>
+      </div>
+      <button class="btn btn-danger mt-4"><i data-icon="logout" data-size="16"></i> خروج از همه دستگاه‌ها</button>
+    </div>
+
+    <!-- Activity -->
+    <div class="card__body tab-panel" id="tab-activity">
+      <div class="timeline" id="profTimeline"></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA)return;
+    document.getElementById('profTimeline').innerHTML=NOVEXA.activities.slice(0,8).map(a=>`
+      <div class="tl-item ${a.type}"><div class="tl-dot"></div>
+        <div class="tl-title">${a.user}</div><div class="tl-body">${a.text}</div><div class="tl-meta">${a.time}</div>
+      </div>`).join('');
+  }
+  if(window.NOVEXA)build();else window.addEventListener('novexa:core-ready',build);
+  document.getElementById('save').addEventListener('click',()=>UI.toast({type:'success',title:'ذخیره شد',message:'پروفایل به‌روزرسانی شد.'}));
+</script>
+</body>
+</html>

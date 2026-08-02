@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>جزئیات محصول — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="product-detail">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>جزئیات محصول</h1>
+    </div>
+    <div class="page-head__actions">
+      <a class="btn btn-ghost" href="products.html"><i data-icon="arrow-right" data-size="18"></i> بازگشت</a>
+      <button class="btn btn-outline"><i data-icon="copy" data-size="18"></i> کپی</button>
+      <button class="btn btn-outline"><i data-icon="print" data-size="18"></i> چاپ</button>
+      <a class="btn btn-primary" href="product-create.html"><i data-icon="edit" data-size="18"></i> ویرایش</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="detail-hero">
+    <div class="avatar detail-hero__avatar" style="background:var(--color-primary-50);color:var(--color-primary);"><i data-icon="box" data-size="40"></i></div>
+    <div class="detail-hero__body">
+      <div class="detail-hero__name">
+        گوشی هوشمند سامسونگ Galaxy S24 Ultra ۵۱۲ گیگابایت
+        <span class="badge badge-success">فعال</span>
+        <span class="badge badge-info">پرفروش</span>
+      </div>
+      <div class="detail-hero__meta">
+        <span><i data-icon="tag"></i> NV-۱۰۰۴۸</span>
+        <span><i data-icon="barcode"></i> ۸۸۰۱۶۴۳۹۹۹۸۲۱</span>
+        <span><i data-icon="folder"></i> کالای دیجیتال › موبایل و تبلت</span>
+        <span><i data-icon="star"></i> سامسونگ</span>
+        <span><i data-icon="calendar"></i> ایجاد: ۱۴۰۳/۰۴/۱۲</span>
+      </div>
+    </div>
+    <div class="flex gap-3 flex-wrap" style="text-align:center;">
+      <div><div class="text-xs text-muted">قیمت فروش</div><div class="text-lg fw-700 text-primary">۲۴٫۹ م‌ت</div></div>
+      <div class="divider-v"></div>
+      <div><div class="text-xs text-muted">موجودی</div><div class="text-lg fw-700">۳۲۴ عدد</div></div>
+    </div>
+  </div>
+
+  <!-- Stat strip -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__head"><div class="stat__icon success"><i data-icon="cart"></i></div></div><div><div class="stat__label">فروش این ماه</div><div class="stat__value">۸۶</div></div><div class="stat__foot"><span class="trend up">+۱۲٪</span></div></div>
+    <div class="stat"><div class="stat__head"><div class="stat__icon primary"><i data-icon="dollar"></i></div></div><div><div class="stat__label">درآمد این ماه</div><div class="stat__value">۲٫۱۴م‌ت</div></div><div class="stat__foot"><span class="trend up">+۸٪</span></div></div>
+    <div class="stat"><div class="stat__head"><div class="stat__icon warning"><i data-icon="percent"></i></div></div><div><div class="stat__label">حاشیه سود</div><div class="stat__value">۳۵٪</div></div><div class="stat__foot">سالم</div></div>
+    <div class="stat"><div class="stat__head"><div class="stat__icon info"><i data-icon="trend-up"></i></div></div><div><div class="stat__label">بازدید محصول</div><div class="stat__value">۴٬۸۲۰</div></div><div class="stat__foot"><span class="trend up">+۲۴٪</span></div></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="card" data-tabs>
+    <div class="card__header flush" style="padding:0 16px;border-bottom:1px solid var(--border);">
+      <div class="tabs__nav" style="border:none;">
+        <button class="tab is-active" data-target="#tab-general">اطلاعات عمومی</button>
+        <button class="tab" data-target="#tab-inventory">موجودی و انبار</button>
+        <button class="tab" data-target="#tab-pricing">قیمت‌گذاری</button>
+        <button class="tab" data-target="#tab-transactions">تراکنش‌ها</button>
+        <button class="tab" data-target="#tab-history">تاریخچه</button>
+      </div>
+    </div>
+
+    <!-- General tab -->
+    <div class="card__body tab-panel is-active" id="tab-general">
+      <div class="info-list">
+        <div class="info-row"><div class="info-row__lbl">نام محصول</div><div class="info-row__val">گوشی هوشمند سامسونگ Galaxy S24 Ultra ۵۱۲ گیگابایت</div></div>
+        <div class="info-row"><div class="info-row__lbl">کد محصول</div><div class="info-row__val cell-id">NV-۱۰۰۴۸</div></div>
+        <div class="info-row"><div class="info-row__lbl">بارکد</div><div class="info-row__val num">۸۸۰۱۶۴۳۹۹۹۸۲۱</div></div>
+        <div class="info-row"><div class="info-row__lbl">دسته‌بندی</div><div class="info-row__val">کالای دیجیتال › موبایل و تبلت</div></div>
+        <div class="info-row"><div class="info-row__lbl">برند</div><div class="info-row__val">سامسونگ</div></div>
+        <div class="info-row"><div class="info-row__lbl">مدل دستگاه</div><div class="info-row__val">Galaxy S24 Ultra</div></div>
+        <div class="info-row"><div class="info-row__lbl">واحد اندازه‌گیری</div><div class="info-row__val">عدد</div></div>
+        <div class="info-row"><div class="info-row__lbl">نوع</div><div class="info-row__val">کالا</div></div>
+        <div class="info-row"><div class="info-row__lbl">توضیحات</div><div class="info-row__val">گوشی هوشمند پرچم‌دار سامسونگ با تراشه Snapdragon 8 Gen 3، نمایشگر ۶٫۸ اینچی و دوربین ۲۰۰ مگاپیکسلی.</div></div>
+      </div>
+      <div class="divider"></div>
+      <h4>مشخصات فنی</h4>
+      <div class="accordion mt-4">
+        <div class="acc-item is-open"><button class="acc-head">مشخصات نمایشگر<i data-icon="chevron-right" data-size="18" class="chev"></i></button><div class="acc-body"><div class="acc-body-inner">نمایشگر Dynamic AMOLED 2X، ۶٫۸ اینچ، رزولوشن ۳۱۲۰×۱۴۴۰، نرخ نوسازی ۱۲۰ هرتز.</div></div></div>
+        <div class="acc-item"><button class="acc-head">دوربین‌ها<i data-icon="chevron-right" data-size="18" class="chev"></i></button><div class="acc-body"><div class="acc-body-inner">اصلی ۲۰۰ مپ، اولتراواید ۱۲ مپ، تله‌فوتو ۱۰ مپ، پریسکوپ ۵۰ مپ.</div></div></div>
+        <div class="acc-item"><button class="acc-head">باتری و شارژ<i data-icon="chevron-right" data-size="18" class="chev"></i></button><div class="acc-body"><div class="acc-body-inner">باتری ۵۰۰۰ میلی‌آمپر، پشتیبانی شارژ سریع ۴۵ وات.</div></div></div>
+      </div>
+    </div>
+
+    <!-- Inventory tab -->
+    <div class="card__body tab-panel" id="tab-inventory">
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+        <div class="stat"><div class="stat__icon primary"><i data-icon="layers"></i></div><div><div class="stat__label">موجودی کل</div><div class="stat__value">۳۲۴</div></div></div>
+        <div class="stat"><div class="stat__icon success"><i data-icon="check"></i></div><div><div class="stat__label">رزرو شده</div><div class="stat__value">۱۸</div></div></div>
+        <div class="stat"><div class="stat__icon info"><i data-icon="trend-up"></i></div><div><div class="stat__label">قابل فروش</div><div class="stat__value">۳۰۶</div></div></div>
+        <div class="stat"><div class="stat__icon warning"><i data-icon="alert"></i></div><div><div class="stat__label">حداقل موجودی</div><div class="stat__value">۲۰</div></div></div>
+      </div>
+      <div class="divider"></div>
+      <h4 class="mb-4">موجودی در انبارها</h4>
+      <div class="table-card">
+        <div class="table-wrap"><table class="data-table">
+          <thead><tr><th>انبار</th><th>موجودی</th><th>رزرو شده</th><th>قابل فروش</th><th>مکان</th><th>وضعیت</th></tr></thead>
+          <tbody>
+            <tr><td>انبار مرکزی تهران</td><td class="num">۲۱۰</td><td class="num">۱۲</td><td class="num">۱۹۸</td><td>A-12-3</td><td><span class="badge badge-success">سالم</span></td></tr>
+            <tr><td>انبار پردیس</td><td class="num">۸۴</td><td class="num">۶</td><td class="num">۷۸</td><td>B-04-1</td><td><span class="badge badge-success">سالم</span></td></tr>
+            <tr><td>انبار شیراز</td><td class="num">۳۰</td><td class="num">۰</td><td class="num">۳۰</td><td>C-08-2</td><td><span class="badge badge-warning">متوسط</span></td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- Pricing tab -->
+    <div class="card__body tab-panel" id="tab-pricing">
+      <div class="info-list">
+        <div class="info-row"><div class="info-row__lbl">قیمت خرید</div><div class="info-row__val">۱۸٬۵۰۰٬۰۰۰ تومان</div></div>
+        <div class="info-row"><div class="info-row__lbl">هزینه جانبی</div><div class="info-row__val">۱٬۲۰۰٬۰۰۰ تومان</div></div>
+        <div class="info-row"><div class="info-row__lbl">قیمت تمام‌شده</div><div class="info-row__val">۱۹٬۷۰۰٬۰۰۰ تومان</div></div>
+        <div class="info-row"><div class="info-row__lbl">حاشیه سود</div><div class="info-row__val text-success">۳۵٪</div></div>
+        <div class="info-row"><div class="info-row__lbl">قیمت فروش</div><div class="info-row__val text-primary fw-700">۲۴٬۹۷۵٬۰۰۰ تومان</div></div>
+        <div class="info-row"><div class="info-row__lbl">قیمت مصرف‌کننده</div><div class="info-row__val">۲۷٬۵۰۰٬۰۰۰ تومان</div></div>
+        <div class="info-row"><div class="info-row__lbl">تخفیف پیش‌فرض</div><div class="info-row__val">۵٪</div></div>
+      </div>
+    </div>
+
+    <!-- Transactions tab -->
+    <div class="card__body tab-panel" id="tab-transactions">
+      <div class="table-card" data-table='{"dataSource":"inventoryTx","pageSize":6,"createBtn":false,"searchPlaceholder":"جستجوی تراکنش...","columns":[
+        {"key":"id","label":"شماره","type":"id","width":"120px"},
+        {"key":"typeLabel","label":"نوع","type":"badge","width":"120px","badges":{"ورود کالا":{"label":"ورود","cls":"success"},"خروج کالا":{"label":"خروج","cls":"danger"},"انتقال":{"label":"انتقال","cls":"info"},"تعدیل":{"label":"تعدیل","cls":"warning"},"مرجوعی":{"label":"مرجوعی","cls":"info"}}},
+        {"key":"qty","label":"تعداد","type":"num","width":"80px"},
+        {"key":"from","label":"مبدأ"},
+        {"key":"to","label":"مقصد"},
+        {"key":"user","label":"کاربر"},
+        {"key":"date","label":"تاریخ","type":"date","width":"140px"}
+      ]}'></div>
+    </div>
+
+    <!-- History tab -->
+    <div class="card__body tab-panel" id="tab-history">
+      <div class="timeline" id="historyTimeline"></div>
+    </div>
+  </div>
+</div>
+
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function buildTimeline(){
+    if (!window.NOVEXA) return;
+    const evts = [
+      { type:'info', user:'سارا محمدی', text:'قیمت فروش را از <b>۲۳٫۵ م‌ت</b> به <b>۲۴٫۹ م‌ت</b> تغییر داد', time:'۲ ساعت پیش' },
+      { type:'success', user:'میلاد رضایی', text:'موجودی انبار مرکزی را <b>۱۲۰ عدد</b> افزایش داد', time:'دیروز، ۱۵:۳۰' },
+      { type:'warning', user:'علی کریمی', text:'تخفیف پیش‌فرض را به <b>۵٪</b> تنظیم کرد', time:'۳ روز پیش' },
+      { type:'info', user:'نگار احمدی', text:'تصاویر جدید محصول را بارگذاری کرد', time:'۵ روز پیش' },
+      { type:'success', user:'میلاد رضایی', text:'محصول را ایجاد کرد', time:'۱۴۰۳/۰۴/۱۲' }
+    ];
+    document.getElementById('historyTimeline').innerHTML = evts.map(e => `
+      <div class="tl-item ${e.type}">
+        <div class="tl-dot"></div>
+        <div class="tl-title">${e.user}</div>
+        <div class="tl-body">${e.text}</div>
+        <div class="tl-meta">${e.time}</div>
+      </div>`).join('');
+  }
+  if (window.NOVEXA) buildTimeline();
+  else window.addEventListener('novexa:core-ready', buildTimeline);
+</script>
+</body>
+</html>

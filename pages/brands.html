@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>برندهای محصول — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="brands">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>برندهای محصول</h1>
+      <p>مدیریت برندهای پشتیبانی‌شده در کاتالوگ</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-primary" data-modal-open="brandModal"><i data-icon="plus" data-size="18"></i> برند جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="tag"></i></div><div><div class="stat__label">کل برندها</div><div class="stat__value">۲۲</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">برندهای فعال</div><div class="stat__value">۲۰</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="box"></i></div><div><div class="stat__label">محصولات مرتبط</div><div class="stat__value">۸۵۴</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="star"></i></div><div><div class="stat__label">برندهای ویژه</div><div class="stat__value">۶</div></div></div>
+  </div>
+
+  <div id="brandTable"></div>
+
+  <div class="modal-backdrop" id="brandModal">
+    <div class="modal modal--sm">
+      <div class="modal__header"><div class="modal__title"><i data-icon="tag" data-size="20"></i> ایجاد برند</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="field"><label class="field-label">نام برند <span class="req">*</span></label><input class="input" placeholder="مثال: سامسونگ"></div>
+        <div class="field"><label class="field-label">نام انگلیسی</label><input class="input" placeholder="Samsung"></div>
+        <div class="field"><label class="field-label">کشور مبدا</label><select class="select"><option>کره جنوبی</option><option>آمریکا</option><option>چین</option><option>آلمان</option><option>ایران</option></select></div>
+        <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea" placeholder="توضیح برند..."></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ایجاد شد',message:'برند جدید ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.NOVEXA||!window.UI)return;
+    const el=document.getElementById('brandTable'); el.className='table-card';
+    const countries=['کره جنوبی','آمریکا','چین','آلمان','ژاپن','تایوان','هلند','ایران'];
+    const data=NOVEXA.PRODUCT_BRANDS.map((b,i)=>({id:i+1,name:b,en:b.toLowerCase().replace(/\s/g,''),country:NOVEXA.pick(countries),products:Math.floor(8+Math.random()*120),status:Math.random()>0.1?'active':'inactive'}));
+    UI.Table.create(el,{
+      data,pageSize:10,searchPlaceholder:'جستجوی برند...',createText:'برند جدید',createHref:'#',
+      columns:[
+        {key:'name',label:'برند',type:'custom',render:(v,r)=>`<div style="display:flex;align-items:center;gap:12px;"><span class="avatar avatar-sm" style="background:var(--color-primary-50);color:var(--color-primary);font-weight:700">${v[0]}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.en}</div></div></div>`},
+        {key:'country',label:'کشور',width:'140px'},
+        {key:'products',label:'محصولات',type:'num',width:'120px'},
+        {key:'status',label:'وضعیت',type:'badge',width:'120px',badges:{active:{label:'فعال',cls:'success'},inactive:{label:'غیرفعال',cls:'neutral'}}},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+</script>
+</body>
+</html>

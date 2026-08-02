@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>فاکتور فروش — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="sales-invoice">
+<div id="app">
+  <div class="page-head no-print">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>فاکتور فروش</h1>
+      <p>صدور فاکتور جدید برای مشتری</p>
+    </div>
+    <div class="page-head__actions">
+      <a class="btn btn-ghost" href="sales.html"><i data-icon="arrow-right" data-size="18"></i> بازگشت</a>
+      <button class="btn btn-outline no-print" onclick="window.print()"><i data-icon="print" data-size="18"></i> چاپ</button>
+      <button class="btn btn-outline no-print"><i data-icon="mail" data-size="18"></i> ارسال ایمیل</button>
+      <button class="btn btn-primary no-print" id="save"><i data-icon="check" data-size="18"></i> صدور فاکتور</button>
+    </div>
+  </div>
+
+  <!-- Invoice header card -->
+  <div class="card">
+    <div class="card__body">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:start;">
+        <div>
+          <div class="text-xs text-muted mb-2">مشتری</div>
+          <div class="combo">
+            <button class="combo__trigger"><span class="combo__value placeholder">انتخاب مشتری...</span><i data-icon="chevron-down" data-size="16" class="chev"></i></button>
+            <div class="combo__panel"><div class="combo__search"><input placeholder="جستجوی مشتری..."></div><div class="combo__list">
+              <div class="combo__opt"><span>شرکت گسترش آریا صنعت</span><i data-icon="check" data-size="16" class="check"></i></div>
+              <div class="combo__opt"><span>سارا محمدی</span><i data-icon="check" data-size="16" class="check"></i></div>
+              <div class="combo__opt"><span>گروه پارس پیشرو</span><i data-icon="check" data-size="16" class="check"></i></div>
+            </div></div>
+          </div>
+        </div>
+        <div>
+          <div class="text-xs text-muted mb-2">شماره فاکتور</div>
+          <input class="input" value="INV-۱۰۲۸۵" readonly style="background:var(--surface-2);">
+          <div class="text-xs text-muted mt-3 mb-2">تاریخ صدور</div>
+          <input class="input" value="۱۴۰۳/۰۷/۱۲">
+        </div>
+        <div>
+          <div class="text-xs text-muted mb-2">تاریخ سررسید</div>
+          <input class="input" value="۱۴۰۳/۰۷/۲۷">
+          <div class="text-xs text-muted mt-3 mb-2">روش پرداخت</div>
+          <select class="select"><option>نقدی</option><option>اقساطی</option><option>اعتباری</option><option>چکی</option></select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Line items -->
+  <div class="card">
+    <div class="card__header"><div class="card__title"><i data-icon="list" data-size="18"></i> اقلام فاکتور</div><button class="btn btn-text"><i data-icon="plus" data-size="16"></i> افزودن کالا</button></div>
+    <div class="card__body flush">
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>کالا</th><th class="col-num">تعداد</th><th class="col-num">قیمت واحد</th><th class="col-num">تخفیف</th><th class="col-num">مالیات</th><th class="col-num">مبلغ کل</th><th class="col-actions"></th></tr></thead>
+        <tbody>
+          <tr><td><div class="cell-strong">گوشی سامسونگ Galaxy S24 Ultra</div><div class="cell-sub">NV-10048 • عدد</div></td><td><input class="input input-sm" style="width:70px;" value="۲"></td><td class="cell-money num">۲۴٫۹۷۵٫۰۰۰</td><td><input class="input input-sm" style="width:60px;" value="۵٪"></td><td class="num">۹٪</td><td class="cell-money">۴۷٫۴۵۲٫۵۰۰</td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+          <tr><td><div class="cell-strong">هدفون بی‌سیم سونی WH-1000XM5</div><div class="cell-sub">NV-10052 • عدد</div></td><td><input class="input input-sm" style="width:70px;" value="۳"></td><td class="cell-money num">۸٫۵۰۰٫۰۰۰</td><td><input class="input input-sm" style="width:60px;" value="۰٪"></td><td class="num">۹٪</td><td class="cell-money">۲۵٫۵۰۰٫۰۰۰</td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+          <tr><td><div class="cell-strong">قاب محافظ سامسونگ S24</div><div class="cell-sub">NV-10090 • عدد</div></td><td><input class="input input-sm" style="width:70px;" value="۵"></td><td class="cell-money num">۴۵۰٫۰۰۰</td><td><input class="input input-sm" style="width:60px;" value="۱۰٪"></td><td class="num">۹٪</td><td class="cell-money">۲٫۰۲۵٫۰۰۰</td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+          <tr><td><div class="cell-strong">شارژر فست شارژ ۴۵ وات</div><div class="cell-sub">NV-10076 • عدد</div></td><td><input class="input input-sm" style="width:70px;" value="۲"></td><td class="cell-money num">۸۵۰٫۰۰۰</td><td><input class="input input-sm" style="width:60px;" value="۰٪"></td><td class="num">۹٪</td><td class="cell-money">۱٫۷۰۰٫۰۰۰</td><td><button class="row-action danger"><i data-icon="trash" data-size="16"></i></button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+    <div class="card__footer" style="background:var(--surface);justify-content:space-between;flex-wrap:wrap;gap:16px;">
+      <div style="flex:1;min-width:240px;">
+        <div class="field" style="margin:0;"><label class="field-label">یادداشت فاکتور</label><textarea class="textarea" style="min-height:60px;" placeholder="توضیحات اضافی برای مشتری..."></textarea></div>
+      </div>
+      <div style="width:320px;">
+        <div class="flex justify-between" style="padding:6px 0;font-size:14px;"><span class="text-muted">جمع کل:</span><b class="num">۷۶٫۶۷۷٫۵۰۰ ت</b></div>
+        <div class="flex justify-between" style="padding:6px 0;font-size:14px;"><span class="text-muted">تخفیف کل:</span><b class="num text-danger">۱٫۴۹۰٫۰۰۰ ت</b></div>
+        <div class="flex justify-between" style="padding:6px 0;font-size:14px;"><span class="text-muted">مالیات بر ارزش افزوده (۹٪):</span><b class="num">۶٫۷۵۶٫۹۷۵ ت</b></div>
+        <div class="flex justify-between" style="padding:6px 0;font-size:14px;"><span class="text-muted">هزینه ارسال:</span><b class="num">۲۵۰٫۰۰۰ ت</b></div>
+        <div class="divider"></div>
+        <div class="flex justify-between items-center" style="padding:8px 0;"><span class="fw-700" style="font-size:16px;">مبلغ نهایی:</span><b class="text-primary num" style="font-size:22px;">۸۲٫۱۹۴٫۴۷۵ ت</b></div>
+        <div class="flex gap-2 mt-2"><button class="btn btn-outline btn-block btn-sm">ذخیره پیش‌نویس</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  document.getElementById('save').addEventListener('click',()=>{
+    UI.toast({type:'success',title:'فاکتور صادر شد',message:'فاکتور INV-۱۰۲۸۵ با موفقیت صادر شد.'});
+    setTimeout(()=>location.href='sales.html',1400);
+  });
+</script>
+</body>
+</html>

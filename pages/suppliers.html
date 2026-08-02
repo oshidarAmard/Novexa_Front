@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تأمین‌کنندگان — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="suppliers">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>تأمین‌کنندگان</h1>
+      <p>مدیریت تأمین‌کنندگان کالا و خدمات — ۱۴۸ شرکت همکار</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> تأمین‌کننده جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="truck"></i></div><div><div class="stat__label">کل تأمین‌کنندگان</div><div class="stat__value">۱۴۸</div></div><div class="stat__foot"><span class="trend up">+۲٫۱٪</span></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">فعال</div><div class="stat__value">۱۳۲</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="star"></i></div><div><div class="stat__label">میانگین امتیاز</div><div class="stat__value">۴٫۲</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="dollar"></i></div><div><div class="stat__label">خرید سال جاری</div><div class="stat__value">۱۲٫۴م‌ت</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="wallet"></i></div><div><div class="stat__label">بدهی به تأمین‌کنندگان</div><div class="stat__value">۸۴۰م‌ت</div></div></div>
+  </div>
+
+  <div class="table-card" data-table='{"dataSource":"suppliers","pageSize":10,"searchPlaceholder":"جستجوی نام، کد، شهر...","filters":true,"columns":[
+    {"key":"name","label":"تأمین‌کننده","type":"custom","render":(v,r)=>`<div style="display:flex;align-items:center;gap:10px;"><span class="avatar avatar-sm" style="background:var(--color-primary-50);color:var(--color-primary)">${NOVEXA.initials(v)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code}</div></div></div>`},
+    {"key":"contact","label":"شخص رابط","width":"140px"},
+    {"key":"city","label":"شهر","width":"110px"},
+    {"key":"category","label":"حوزه فعالیت","width":"150px"},
+    {"key":"rating","label":"امتیاز","type":"custom","width":"120px","render":(v)=>`<div style="display:flex;align-items:center;gap:4px;color:var(--warning);"><i data-icon="star" data-size="14"></i><b style="color:var(--text);">${NOVEXA.toFa(v)}</b></div>`},
+    {"key":"payable","label":"بدهی","type":"money","width":"150px","sortable":true},
+    {"key":"status","label":"وضعیت","type":"badge","width":"120px","badges":{"active":{"label":"فعال","cls":"success"},"inactive":{"label":"غیرفعال","cls":"neutral"}}},
+    {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"]}
+  ]}'></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="truck" data-size="20"></i> تأمین‌کننده جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">نام شرکت <span class="req">*</span></label><input class="input" placeholder="نام شرکت"></div>
+          <div class="field"><label class="field-label">کد</label><input class="input" value="S-۸۲۵" readonly style="background:var(--surface-2);"></div>
+          <div class="field"><label class="field-label">کد اقتصادی</label><input class="input" placeholder="کد اقتصادی"></div>
+          <div class="field"><label class="field-label">شخص رابط</label><input class="input" placeholder="نام رابط"></div>
+          <div class="field"><label class="field-label">تلفن ثابت</label><input class="input" placeholder="۰۲۱-..."></div>
+          <div class="field"><label class="field-label">تلفن همراه</label><input class="input" placeholder="۰۹۱۲-..."></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">شهر</label><select class="select"><option>تهران</option><option>مشهد</option></select></div>
+          <div class="field"><label class="field-label">حوزه فعالیت</label><select class="select"><option>کالای دیجیتال</option><option>لوازم خانگی</option></select></div>
+        </div>
+        <div class="field"><label class="field-label">آدرس</label><textarea class="textarea"></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'تأمین‌کننده ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

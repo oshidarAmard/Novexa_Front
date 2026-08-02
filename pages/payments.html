@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>پرداخت‌ها — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="payments">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>پرداخت‌ها و حسابداری</h1>
+      <p>مدیریت پرداخت‌های دریافتی و پرداختنی</p>
+    </div>
+    <div class="page-head__actions">
+      <div class="segment">
+        <button class="is-active">دریافتی</button>
+        <button>پرداختنی</button>
+      </div>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="plus" data-size="18"></i> ثبت پرداخت</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon success"><i data-icon="trend-up"></i></div><div><div class="stat__label">دریافتی امروز</div><div class="stat__value">۸۴م‌ت</div></div><div class="stat__foot"><span class="trend up">۱۲٪</span></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="trend-down"></i></div><div><div class="stat__label">پرداختنی امروز</div><div class="stat__value">۳۲م‌ت</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">معوقات</div><div class="stat__value">۲۴</div></div><div class="stat__foot">۱۴۲م‌ت سررسید گذشته</div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="wallet"></i></div><div><div class="stat__label">موجودی صندوق</div><div class="stat__value">۴۸۰م‌ت</div></div></div>
+  </div>
+
+  <div class="card">
+    <div class="card__header"><div class="card__title"><i data-icon="credit" data-size="18"></i> روش‌های پرداخت این ماه</div></div>
+    <div class="card__body" style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center;">
+      <div class="chart-box sm" style="position:relative;"><div class="chart-wrap"><canvas id="payDonut"></canvas></div>
+        <div class="donut-center"><div class="val">۴۸٪</div><div class="lbl">نقدی</div></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;">
+        <div class="flex justify-between items-center"><span class="lg flex items-center gap-2"><span class="swatch" style="width:10px;height:10px;border-radius:3px;background:var(--success);"></span> نقدی</span><b class="num">۴۸٪ • ۱٫۱۵م‌ت</b></div>
+        <div class="flex justify-between items-center"><span class="lg flex items-center gap-2"><span class="swatch" style="width:10px;height:10px;border-radius:3px;background:var(--color-primary);"></span> کارت بانکی</span><b class="num">۲۸٪ • ۶۷۲م‌ت</b></div>
+        <div class="flex justify-between items-center"><span class="lg flex items-center gap-2"><span class="swatch" style="width:10px;height:10px;border-radius:3px;background:var(--warning);"></span> اقساطی</span><b class="num">۱۴٪ • ۳۳۶م‌ت</b></div>
+        <div class="flex justify-between items-center"><span class="lg flex items-center gap-2"><span class="swatch" style="width:10px;height:10px;border-radius:3px;background:var(--violet,#7C3AED);"></span> چکی</span><b class="num">۱۰٪ • ۲۴۰م‌ت</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="table-card" data-table='{"dataSource":"sales","pageSize":10,"searchPlaceholder":"جستجوی پرداخت...","filters":true,"columns":[
+    {"key":"id","label":"شماره سند","type":"id","width":"130px"},
+    {"key":"customer","label":"طرف حساب"},
+    {"key":"date","label":"تاریخ",type:"date","width":"120px","type":"date"},
+    {"key":"total","label":"مبلغ",type:"money","width":"160px","sortable":true},
+    {"key":"paid","label":"پرداخت‌شده","type":"money","width":"160px"},
+    {"key":"payment","label":"روش",type:"custom","width":"110px","render":(v)=>`<span class="tag">${v}</span>`},
+    {"key":"statusLabel","label":"وضعیت","type":"badge","width":"130px","badges":{"در انتظار":{"label":"در انتظار","cls":"warning"},"در حال پردازش":{"label":"ثبت شده","cls":"info"},"ارسال شده":{"label":"تسویه جزئی","cls":"warning"},"تحویل شده":{"label":"تسویه کامل","cls":"success"},"مرجوع شده":{"label":"برگشت خورده","cls":"danger"},"لغو شده":{"label":"لغو","cls":"neutral"}}}
+  ]}'></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal">
+      <div class="modal__header"><div class="modal__title"><i data-icon="dollar" data-size="20"></i> ثبت پرداخت</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid">
+          <div class="field"><label class="field-label">نوع پرداخت</label>
+            <div class="segment"><button class="is-active">دریافتی</button><button>پرداختنی</button></div>
+          </div>
+          <div class="field"><label class="field-label">طرف حساب <span class="req">*</span></label><input class="input" placeholder="نام مشتری/تأمین‌کننده"></div>
+        </div>
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">مبلغ <span class="req">*</span></label><div class="input-affixed"><span class="input-prefix">تومان</span><input class="input" type="number"></div></div>
+          <div class="field"><label class="field-label">تاریخ</label><input class="input" value="۱۴۰۳/۰۷/۱۲"></div>
+          <div class="field"><label class="field-label">روش پرداخت</label><select class="select"><option>نقدی</option><option>کارت</option><option>چک</option><option>اقساطی</option><option>حواله</option></select></div>
+        </div>
+        <div class="field"><label class="field-label">سند مرجع (فاکتور)</label><input class="input" placeholder="INV-10285"></div>
+        <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea"></textarea></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ثبت شد',message:'پرداخت ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  window.addEventListener('load',()=>{
+    setTimeout(()=>{
+      if(window.Charts)Charts.donut(document.getElementById('payDonut'),['نقدی','کارت','اقساطی','چکی'],[48,28,14,10],['#22C55E','#2563EB','#F59E0B','#7C3AED'],{center:'۲٫۴م',centerLabel:'کل'});
+    },300);
+  });
+</script>
+</body>
+</html>

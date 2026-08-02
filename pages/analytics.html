@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تحلیل و گزارش — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="analytics">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>تحلیل‌های پیشرفته</h1>
+      <p>نمای تحلیلی عمیق از عملکرد کسب‌وکار</p>
+    </div>
+    <div class="page-head__actions">
+      <div class="segment"><button class="is-active">هفتگی</button><button>ماهانه</button><button>سالانه</button></div>
+      <button class="btn btn-outline" onclick="window.print()"><i data-icon="print" data-size="18"></i> چاپ</button>
+      <button class="btn btn-primary"><i data-icon="download" data-size="18"></i> دریافت گزارش</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="stat"><div class="stat__icon success"><i data-icon="trend-up"></i></div><div><div class="stat__label">نرخ رشد فروش</div><div class="stat__value">۲۴٪</div></div><div class="stat__foot"><span class="trend up">+۸٪</span> نسبت به دوره قبل</div></div>
+    <div class="stat"><div class="stat__icon primary"><i data-icon="percent"></i></div><div><div class="stat__label">حاشیه سود ناخالص</div><div class="stat__value">۳۲٫۴٪</div></div><div class="stat__foot"><span class="trend up">+۲٫۱٪</span></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="users"></i></div><div><div class="stat__label">نرخ حفظ مشتری</div><div class="stat__value">۹۲٪</div></div><div class="stat__foot"><span class="trend up">+۱٫۲٪</span></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="cart"></i></div><div><div class="stat__label">میانگین ارزش سفارش</div><div class="stat__value">۳٫۲م‌ت</div></div><div class="stat__foot"><span class="trend up">+۵٪</span></div></div>
+  </div>
+
+  <div class="dash-grid">
+    <div class="card">
+      <div class="card__header"><div class="card__title"><i data-icon="trend-up" data-size="18"></i> روند فروش سالانه</div></div>
+      <div class="card__body"><div class="chart-box"><div class="chart-wrap"><canvas data-chart="line" data-src="revenue"></canvas></div></div></div>
+    </div>
+    <div class="card">
+      <div class="card__header"><div class="card__title"><i data-icon="pie" data-size="18"></i> سهم دسته‌ها</div></div>
+      <div class="card__body"><div class="chart-box sm" style="position:relative;"><div class="chart-wrap"><canvas id="catDonut"></canvas></div>
+        <div class="donut-center"><div class="val">۴۲٪</div><div class="lbl">دیجیتال</div></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="dash-row">
+    <div class="card"><div class="card__header"><div class="card__title"><i data-icon="bar" data-size="18"></i> فروش هفتگی</div></div><div class="card__body"><div class="chart-box sm"><div class="chart-wrap"><canvas data-chart="bar" data-src="weekly"></canvas></div></div></div></div>
+    <div class="card"><div class="card__header"><div class="card__title"><i data-icon="activity" data-size="18"></i> نرخ تبدیل کانال</div></div><div class="card__body">
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div><div class="flex justify-between mb-2"><span class="text-sm">فروشگاه آنلاین</span><b class="num">۶۸٪</b></div><div class="progress"><div class="progress__bar success" style="width:68%"></div></div></div>
+        <div><div class="flex justify-between mb-2"><span class="text-sm">حضوری</span><b class="num">۸۲٪</b></div><div class="progress"><div class="progress__bar" style="width:82%"></div></div></div>
+        <div><div class="flex justify-between mb-2"><span class="text-sm">تلفنی</span><b class="num">۴۲٪</b></div><div class="progress"><div class="progress__bar warning" style="width:42%"></div></div></div>
+        <div><div class="flex justify-between mb-2"><span class="text-sm">نمایندگی</span><b class="num">۵۸٪</b></div><div class="progress"><div class="progress__bar info" style="width:58%"></div></div></div>
+      </div>
+    </div></div></div>
+    <div class="card"><div class="card__header"><div class="card__title"><i data-icon="star" data-size="18"></i> ۱۰ مشتری برتر</div></div><div class="card__body flush">
+      <div style="display:flex;flex-direction:column;">
+        <div class="activity-item"><div class="avatar avatar-sm">س‌م</div><div class="activity-item__body"><div class="activity-item__text"><b>سارا محمدی</b></div><div class="activity-item__time">۴۲۰ میلیون تومان</div></div></div>
+        <div class="activity-item"><div class="avatar avatar-sm">گ‌آ</div><div class="activity-item__body"><div class="activity-item__text"><b>گسترش آریا</b></div><div class="activity-item__time">۳۸۰ میلیون تومان</div></div></div>
+        <div class="activity-item"><div class="avatar avatar-sm">ع‌ک</div><div class="activity-item__body"><div class="activity-item__text"><b>علی کریمی</b></div><div class="activity-item__time">۲۹۰ میلیون تومان</div></div></div>
+        <div class="activity-item"><div class="avatar avatar-sm">پ‌ص</div><div class="activity-item__body"><div class="activity-item__text"><b>پارس صنعت</b></div><div class="activity-item__time">۲۴۰ میلیون تومان</div></div></div>
+      </div>
+    </div></div></div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  window.addEventListener('load',()=>{
+    setTimeout(()=>{
+      if(window.Charts)Charts.donut(document.getElementById('catDonut'),NOVEXA.CHART.categories.labels,NOVEXA.CHART.categories.data,['#2563EB','#22C55E','#F59E0B','#06B6D4','#EF4444','#7C3AED'],{center:'۴۲٪',centerLabel:'دیجیتال'});
+    },300);
+  });
+</script>
+</body>
+</html>

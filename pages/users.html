@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>کاربران — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="users">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مدیریت کاربران</h1>
+      <p>کاربران سیستم و سطوح دسترسی</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="download" data-size="18"></i> <span class="hide-mobile">خروجی</span></button>
+      <button class="btn btn-primary" data-modal-open="m"><i data-icon="user-plus" data-size="18"></i><i data-icon="plus" data-size="18"></i> کاربر جدید</button>
+    </div>
+  </div>
+
+  <div class="kpi-grid" style="grid-template-columns:repeat(5,1fr);">
+    <div class="stat"><div class="stat__icon primary"><i data-icon="users"></i></div><div><div class="stat__label">کل کاربران</div><div class="stat__value">۴۸</div></div></div>
+    <div class="stat"><div class="stat__icon success"><i data-icon="check-circle"></i></div><div><div class="stat__label">فعال</div><div class="stat__value">۴۲</div></div></div>
+    <div class="stat"><div class="stat__icon warning"><i data-icon="clock"></i></div><div><div class="stat__label">در انتظار</div><div class="stat__value">۴</div></div></div>
+    <div class="stat"><div class="stat__icon danger"><i data-icon="lock"></i></div><div><div class="stat__label">غیرفعال</div><div class="stat__value">۲</div></div></div>
+    <div class="stat"><div class="stat__icon info"><i data-icon="shield"></i></div><div><div class="stat__label">نقش‌ها</div><div class="stat__value">۹</div></div></div>
+  </div>
+
+  <div class="table-card" data-table='{"dataSource":"users","pageSize":10,"searchPlaceholder":"جستجوی کاربر...","filters":true,"columns":[
+    {"key":"name","label":"کاربر","type":"user"},
+    {"key":"role","label":"نقش"},
+    {"key":"department","label":"دپارتمان","width":"140px"},
+    {"key":"email","label":"ایمیل"},
+    {"key":"lastLogin","label":"آخرین ورود","type":"date","width":"180px"},
+    {"key":"status","label":"وضعیت","type":"badge","width":"120px","badges":{"active":{"label":"فعال","cls":"success"},"inactive":{"label":"غیرفعال","cls":"neutral"},"pending":{"label":"در انتظار","cls":"warning"}}},
+    {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"]}
+  ]}'></div>
+
+  <div class="modal-backdrop" id="m">
+    <div class="modal modal--lg">
+      <div class="modal__header"><div class="modal__title"><i data-icon="user" data-size="20"></i> کاربر جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
+      <div class="modal__body">
+        <div class="form-grid cols-3">
+          <div class="field"><label class="field-label">نام <span class="req">*</span></label><input class="input" placeholder="نام"></div>
+          <div class="field"><label class="field-label">نام خانوادگی <span class="req">*</span></label><input class="input" placeholder="نام خانوادگی"></div>
+          <div class="field"><label class="field-label">نام کاربری <span class="req">*</span></label><input class="input" placeholder="username"></div>
+          <div class="field"><label class="field-label">ایمیل <span class="req">*</span></label><div class="input-group"><span class="input-icon" data-icon="mail"></span><input class="input" placeholder="email@novexa.ir"></div></div>
+          <div class="field"><label class="field-label">تلفن</label><div class="input-group"><span class="input-icon" data-icon="phone"></span><input class="input" placeholder="۰۹۱۲..."></div></div>
+          <div class="field"><label class="field-label">نقش <span class="req">*</span></label><select class="select"><option>مدیر سیستم</option><option>مدیر فروش</option><option>کارشناس انبار</option><option>حسابدار</option></select></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label class="field-label">دپارتمان</label><select class="select"><option>مدیریت</option><option>فروش</option><option>انبار</option><option>مالی</option></select></div>
+          <div class="field"><label class="field-label">رمز عبور موقت</label><div class="input-group"><span class="input-icon" data-icon="key"></span><input class="input" value="Temp@1403"></div></div>
+        </div>
+        <div class="field"><label class="switch"><input type="checkbox" checked><span class="switch__track"></span><span style="font-size:14px;">ارسال ایمیل خوش‌آمدگویی</span></label></div>
+      </div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'کاربر ایجاد شد',message:'ایمیل خوش‌آمدگویی ارسال شد.'})"><i data-icon="check" data-size="16"></i> ایجاد کاربر</button></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+</body>
+</html>

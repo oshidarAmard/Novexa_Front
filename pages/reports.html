@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>گزارش‌ها — نوواکسا ERP</title>
+  <script src="../assets/js/head.js" data-base="../"></script>
+</head>
+<body data-page="reports">
+<div id="app">
+  <div class="page-head">
+    <div class="page-head__title">
+      <div data-breadcrumb></div>
+      <h1>مرکز گزارش‌ها</h1>
+      <p>گزارش‌های استاندارد و سفارشی سازمان</p>
+    </div>
+    <div class="page-head__actions">
+      <button class="btn btn-outline"><i data-icon="clock" data-size="18"></i> زمان‌بندی گزارش</button>
+      <button class="btn btn-primary"><i data-icon="plus" data-size="18"></i> گزارش سفارشی</button>
+    </div>
+  </div>
+
+  <!-- Categories grid -->
+  <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);">
+    <div class="card is-clickable"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+      <div class="stat__icon primary"><i data-icon="shopping"></i></div>
+      <div><div class="text-sm text-muted">گزارش‌های</div><div class="fw-700" style="font-size:18px;">فروش</div><div class="text-xs text-muted mt-1">۱۲ گزارش</div></div>
+    </div></div>
+    <div class="card is-clickable"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+      <div class="stat__icon success"><i data-icon="cart"></i></div>
+      <div><div class="text-sm text-muted">گزارش‌های</div><div class="fw-700" style="font-size:18px;">خرید</div><div class="text-xs text-muted mt-1">۸ گزارش</div></div>
+    </div></div>
+    <div class="card is-clickable"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+      <div class="stat__icon warning"><i data-icon="warehouse"></i></div>
+      <div><div class="text-sm text-muted">گزارش‌های</div><div class="fw-700" style="font-size:18px;">انبار</div><div class="text-xs text-muted mt-1">۱۰ گزارش</div></div>
+    </div></div>
+    <div class="card is-clickable"><div class="card__body" style="display:flex;align-items:center;gap:16px;">
+      <div class="stat__icon info"><i data-icon="dollar"></i></div>
+      <div><div class="text-sm text-muted">گزارش‌های</div><div class="fw-700" style="font-size:18px;">مالی</div><div class="text-xs text-muted mt-1">۱۴ گزارش</div></div>
+    </div></div>
+  </div>
+
+  <!-- Filter bar -->
+  <div class="card"><div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+    <div class="input-group" style="flex:1;min-width:200px;"><span class="input-icon" data-icon="search"></span><input class="input" placeholder="جستجوی گزارش..."></div>
+    <select class="select" style="width:auto;"><option>همه دسته‌ها</option><option>فروش</option><option>خرید</option><option>انبار</option><option>مالی</option></select>
+    <select class="select" style="width:auto;"><option>مرتب‌سازی: پراستفاده</option><option>جدیدترین</option><option>حروف الفبا</option></select>
+  </div></div>
+
+  <!-- Reports list -->
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;" id="reports"></div>
+
+  <!-- Favorite reports -->
+  <div class="card">
+    <div class="card__header"><div class="card__title"><i data-icon="star" data-size="18"></i> گزارش‌های منتخب</div></div>
+    <div class="card__body flush">
+      <div class="table-wrap"><table class="data-table">
+        <thead><tr><th>عنوان گزارش</th><th>دسته</th><th>ت آخرین اجرا</th><th>آخرین کاربر</th><th></th></tr></thead>
+        <tbody>
+          <tr><td><div class="cell-strong">گزارش جامع فروش ماهانه</div></td><td><span class="badge badge-primary no-dot">فروش</span></td><td>۱۴۰۳/۰۷/۱۲</td><td>میلاد رضایی</td><td><button class="btn btn-sm btn-outline"><i data-icon="play" data-size="14"></i> اجرا</button></td></tr>
+          <tr><td><div class="cell-strong">گزارش سود و زیان</div></td><td><span class="badge badge-info no-dot">مالی</span></td><td>۱۴۰۳/۰۷/۱۰</td><td>نگار احمدی</td><td><button class="btn btn-sm btn-outline"><i data-icon="play" data-size="14"></i> اجرا</button></td></tr>
+          <tr><td><div class="cell-strong">وضعیت موجودی انبارها</div></td><td><span class="badge badge-warning no-dot">انبار</span></td><td>۱۴۰۳/۰۷/۰۹</td><td>علی کریمی</td><td><button class="btn btn-sm btn-outline"><i data-icon="play" data-size="14"></i> اجرا</button></td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+<script src="../assets/js/layout.js"></script>
+<script src="../assets/js/components.js"></script>
+<script>
+  function build(){
+    if(!window.Icon)return;
+    const reports=[
+      {icon:'trend-up',color:'primary',cat:'فروش',title:'گزارش جامع فروش',desc:'تحلیل کامل فروش بر اساس دوره، محصول و مشتری'},
+      {icon:'percent',color:'success',cat:'مالی',title:'گزارش سود و زیان',desc:'صورت سود و زیان دوره‌ای با جزئیات کامل'},
+      {icon:'warehouse',color:'warning',cat:'انبار',title:'گزارش موجودی انبار',desc:'موجودی لحظه‌ای همه انبارها و کالاها'},
+      {icon:'users',color:'info',cat:'فروش',title:'تحلیل رفتار مشتری',desc:'RFM و چرخه حیات مشتریان'},
+      {icon:'cart',color:'primary',cat:'خرید',title:'گزارش عملکرد تأمین‌کنندگان',desc:'ارزیابی تأمین‌کنندگان بر اساس کیفیت و زمان'},
+      {icon:'file',color:'danger',cat:'مالی',title:'گزارش طلب و بدهی',desc:'فهرست کامل مطالبات و بدهی‌ها'},
+      {icon:'activity',color:'info',cat:'انبار',title:'گزارش گردش کالا',desc:'ورود، خروج و موجودی هر کالا'},
+      {icon:'credit',color:'success',cat:'مالی',title:'گزارش جریان نقدی',desc:'ورودی و خروجی وجه نقدی'},
+      {icon:'bar',color:'warning',cat:'فروش',title:'پرفروش‌ترین محصولات',desc:'رتبه‌بندی محصولات بر اساس فروش'}
+    ];
+    document.getElementById('reports').innerHTML=reports.map(r=>`
+      <div class="card is-clickable">
+        <div class="card__body">
+          <div class="flex justify-between items-start mb-3">
+            <div class="stat__icon ${r.color}" style="width:40px;height:40px;">${Icon(r.icon,20)}</div>
+            <span class="badge badge-neutral no-dot">${r.cat}</span>
+          </div>
+          <h4 style="font-size:15px;margin-bottom:4px;">${r.title}</h4>
+          <p class="text-sm text-muted" style="font-size:13px;line-height:1.6;">${r.desc}</p>
+          <div class="divider"></div>
+          <div class="flex justify-between items-center">
+            <span class="text-xs text-muted"><i data-icon="clock" data-size="12"></i> ۵ دقیقه پیش</span>
+            <button class="btn btn-text btn-sm">اجرا <i data-icon="arrow-left" data-size="14"></i></button>
+          </div>
+        </div>
+      </div>`).join('');
+    renderIcons(document.getElementById('reports'));
+  }
+  if(window.Icon)build();else window.addEventListener('novexa:core-ready',build);
+</script>
+</body>
+</html>
