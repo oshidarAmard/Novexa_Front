@@ -395,7 +395,18 @@
       const el = state.el;
       // search
       const search = el.querySelector('.table-toolbar__search input');
-      if (search) search.addEventListener('input', (e) => { state.search = e.target.value.trim(); state.page = 1; state.render(); search.focus(); });
+      if (search) search.addEventListener('input', (e) => {
+        const cursorPos = e.target.selectionStart;
+        state.search = e.target.value;
+        state.page = 1;
+        state.render();
+        const freshSearch = state.el.querySelector('.table-toolbar__search input');
+        if (freshSearch) {
+          freshSearch.focus();
+          const pos = Math.min(cursorPos, freshSearch.value.length);
+          freshSearch.setSelectionRange(pos, pos);
+        }
+      });
       // sort
       $$('[data-sort]', el).forEach(th => th.addEventListener('click', () => {
         const k = th.getAttribute('data-sort');

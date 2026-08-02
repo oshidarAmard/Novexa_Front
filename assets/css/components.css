@@ -265,8 +265,8 @@
   content:attr(data-tooltip);
   position:absolute;
   bottom:calc(100% + 8px);
-  inset-inline-start:50%;
-  transform:translateX(50%);
+  left:50%;
+  transform:translateX(-50%);
   background:var(--color-secondary);
   color:#fff;
   padding:5px 9px;
