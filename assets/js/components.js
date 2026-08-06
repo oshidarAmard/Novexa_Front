@@ -233,14 +233,43 @@
         sortKey: config.defaultSort || null,
         sortDir: 'asc',
         selected: new Set(),
-        raw: config.data
+        raw: config.data || [],
+        total: (config.data || []).length,
+        serverMode: typeof config.fetchData === 'function',
+        loading: false
       };
       Table.instances[el.id || 'tbl_' + Math.random()] = state;
       state.render = () => Table.render(state);
-      state.render();
+      if (state.serverMode) Table.refresh(state); else state.render();
       return state;
     },
+    /**
+     * Re-fetches data for server-driven tables (config.fetchData was supplied
+     * to Table.create) and re-renders. For client-array tables this just
+     * re-renders synchronously — safe to call from either mode.
+     * fetchData(state) must resolve to { items, total }.
+     */
+    async refresh(state) {
+      if (state.serverMode) {
+        state.loading = true;
+        try {
+          const result = await state.config.fetchData(state);
+          state.raw = (result && result.items) || [];
+          state.total = (result && result.total != null) ? result.total : state.raw.length;
+        } catch (err) {
+          state.raw = [];
+          state.total = 0;
+          if (global.UI && UI.toast) {
+            UI.toast({ type: 'danger', title: 'خطا در دریافت اطلاعات', message: (err && err.message) || 'خطای ناشناخته رخ داد.' });
+          }
+        } finally {
+          state.loading = false;
+        }
+      }
+      state.render();
+    },
     filtered(state) {
+      if (state.serverMode) return state.raw.slice();
       let rows = state.raw.slice();
       if (state.search) {
         const q = state.search;
@@ -258,11 +287,11 @@
     },
     render(state) {
       const rows = Table.filtered(state);
-      const total = rows.length;
+      const total = state.serverMode ? state.total : rows.length;
       const pages = Math.max(1, Math.ceil(total / state.pageSize));
       if (state.page > pages) state.page = pages;
       const start = (state.page - 1) * state.pageSize;
-      const slice = rows.slice(start, start + state.pageSize);
+      const slice = state.serverMode ? rows : rows.slice(start, start + state.pageSize);
       const allOnPage = slice.length > 0 && slice.every(r => state.selected.has(r.id));
       const c = state.config;
 
@@ -395,11 +424,11 @@
       const el = state.el;
       // search
       const search = el.querySelector('.table-toolbar__search input');
-      if (search) search.addEventListener('input', (e) => {
+      if (search) search.addEventListener('input', async (e) => {
         const cursorPos = e.target.selectionStart;
         state.search = e.target.value;
         state.page = 1;
-        state.render();
+        await Table.refresh(state);
         const freshSearch = state.el.querySelector('.table-toolbar__search input');
         if (freshSearch) {
           freshSearch.focus();
@@ -412,7 +441,7 @@
         const k = th.getAttribute('data-sort');
         if (state.sortKey === k) state.sortDir = state.sortDir === 'asc' ? 'desc' : 'asc';
         else { state.sortKey = k; state.sortDir = 'asc'; }
-        state.render();
+        Table.refresh(state);
       }));
       // pagination
       $$('[data-page]', el).forEach(b => b.addEventListener('click', () => {
@@ -420,10 +449,10 @@
         if (p === 'prev') state.page = Math.max(1, state.page-1);
         else if (p === 'next') state.page = state.page+1;
         else state.page = +p;
-        state.render();
+        Table.refresh(state);
       }));
       const ps = el.querySelector('[data-page-size]');
-      if (ps) ps.addEventListener('change', (e) => { state.pageSize = +e.target.value; state.page = 1; state.render(); });
+      if (ps) ps.addEventListener('change', (e) => { state.pageSize = +e.target.value; state.page = 1; Table.refresh(state); });
       // select
       const all = el.querySelector('[data-select-all]');
       if (all) all.addEventListener('change', () => {
@@ -438,7 +467,12 @@
       }));
       // refresh
       const ref = el.querySelector('[data-refresh]');
-      if (ref) ref.addEventListener('click', () => { ref.classList.add('spin'); toast({type:'info',title:'به‌روزرسانی',message:'داده‌ها از سرور همگام‌سازی شد.'}); setTimeout(()=>ref.classList.remove('spin'),700); });
+      if (ref) ref.addEventListener('click', async () => {
+        ref.classList.add('spin');
+        await Table.refresh(state);
+        toast({ type: 'success', title: 'به‌روزرسانی شد', message: 'داده‌ها با موفقیت به‌روزرسانی شدند.' });
+        setTimeout(() => ref.classList.remove('spin'), 700);
+      });
     }
   };
 

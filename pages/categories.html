@@ -35,9 +35,9 @@
     <div class="modal">
       <div class="modal__header"><div class="modal__title"><i data-icon="folder" data-size="20"></i> ایجاد دسته‌بندی</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
-        <div class="field"><label class="field-label">نام دسته <span class="req">*</span></label><input class="input" placeholder="مثال: لوازم جانبی موبایل"></div>
+        <div class="field"><label class="field-label">نام دسته <span class="req">*</span></label><input class="input" id="catNameInput" placeholder="مثال: لوازم جانبی موبایل"></div>
         <div class="form-grid">
-          <div class="field"><label class="field-label">دسته والد</label><select class="select"><option>— اصلی —</option><option>کالای دیجیتال</option><option>لوازم خانگی</option></select></div>
+          <div class="field"><label class="field-label">دسته والد</label><select class="select" id="catParentSelect"><option value="">— اصلی —</option></select></div>
           <div class="field"><label class="field-label">نشانک (slug)</label><input class="input" placeholder="auto-generated" value="accessories"></div>
         </div>
         <div class="form-grid">
@@ -46,7 +46,7 @@
         </div>
         <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea" placeholder="توضیح دسته..."></textarea></div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ایجاد شد',message:'دسته‌بندی جدید ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد دسته</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="catCreateBtn"><i data-icon="check" data-size="16"></i> ایجاد دسته</button></div>
     </div>
   </div>
 </div>
@@ -54,14 +54,43 @@
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
-  function buildCatTable(){
+  async function buildCatTable(){
     if (!window.NOVEXA || !window.UI) return;
     const el = document.getElementById('catTable');
     el.className = 'table-card';
-    const data = NOVEXA.CATEGORIES.map(c => ({
-      ...c,
-      parent: c.parent ? NOVEXA.CATEGORIES.find(p=>p.id===c.parent)?.name : null
+
+    // Data source: GET /api/Categories (see api/services.js → NovexaApi.Categories.list()).
+    // The backend DTO only guarantees { id, name, parentId } (per the OpenAPI spec) — slug/
+    // icon/color/productCount aren't modeled server-side yet, so we fall back to sensible
+    // display defaults for those until the backend adds them. Falls back to NOVEXA mock data
+    // if the API call fails (e.g. backend not running yet), so the page never breaks.
+    let apiRows = null;
+    try {
+      apiRows = await NovexaApi.Categories.list();
+    } catch (err) {
+      UI.toast({ type: 'danger', title: 'خطا در دریافت دسته‌بندی‌ها', message: (err && err.message) || 'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.' });
+    }
+    const source = Array.isArray(apiRows) ? apiRows : NOVEXA.CATEGORIES;
+    const byId = {};
+    source.forEach(c => { byId[c.id] = c; });
+    const data = source.map(c => ({
+      id: c.id,
+      name: c.name,
+      parent: (c.parentId ?? c.parent) ? (byId[c.parentId ?? c.parent]?.name || null) : null,
+      slug: c.slug || String(c.name || '').trim().replace(/\s+/g, '-'),
+      icon: c.icon || 'folder',
+      color: c.color || '#2563EB',
+      count: c.productCount ?? c.count ?? 0,
+      isActive: c.isActive !== false
     }));
+
+    // Keep the "دسته والد" dropdown in the create modal in sync with real data.
+    const parentSelect = document.getElementById('catParentSelect');
+    if (parentSelect) {
+      parentSelect.innerHTML = '<option value="">— اصلی —</option>' +
+        source.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
+
     UI.Table.create(el, {
       data,
       pageSize: 50,
@@ -80,6 +109,31 @@
   }
   if (window.NOVEXA && window.UI) buildCatTable();
   else window.addEventListener('novexa:core-ready', () => setTimeout(buildCatTable, 100));
+
+  document.getElementById('catCreateBtn').addEventListener('click', async () => {
+    const nameEl = document.getElementById('catNameInput');
+    const parentEl = document.getElementById('catParentSelect');
+    const name = (nameEl.value || '').trim();
+    if (!name) {
+      nameEl.classList.add('is-invalid');
+      UI.toast({ type: 'danger', title: 'خطای اعتبارسنجی', message: 'نام دسته الزامی است.' });
+      return;
+    }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('catCreateBtn');
+    btn.classList.add('is-loading');
+    try {
+      await NovexaApi.Categories.create({ name, parentId: parentEl.value || null });
+      UI.toast({ type: 'success', title: 'ایجاد شد', message: 'دسته‌بندی جدید ایجاد شد.' });
+      UI.Modal.close('catModal');
+      nameEl.value = '';
+      buildCatTable();
+    } catch (err) {
+      UI.toast({ type: 'danger', title: 'خطا در ایجاد دسته‌بندی', message: (err && err.message) || 'عملیات ناموفق بود.' });
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
 </script>
 </body>
 </html>

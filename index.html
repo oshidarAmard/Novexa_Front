@@ -115,6 +115,12 @@
       tg.innerHTML = Icon(shown ? 'eye' : 'lock', 18);
     });
     // submit
+    // TODO(auth): once POST /api/auth/login exists on the backend, replace the
+    // setTimeout below with:
+    //   NovexaAuth.login(document.getElementById('username').value, pwd.value, rememberMe)
+    //     .then(() => { UI.Modal.open('successModal'); setTimeout(() => location.href = 'pages/dashboard.html', 1100); })
+    //     .catch((err) => { btn.classList.remove('is-loading'); UI.toast({ type:'danger', title:'ورود ناموفق', message: err.message }); });
+    // Everything else on this page (markup, modal, redirect target) stays the same.
     document.getElementById('loginForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const btn = document.getElementById('loginBtn');

@@ -6,6 +6,17 @@
 (function () {
   'use strict';
 
+  /* ---------- Logged-in user (falls back to today's mock values until
+     the backend Auth module ships — see assets/js/api/auth.js) ---------- */
+  function displayUser() {
+    const u = (window.NovexaAuth && NovexaAuth.currentUser()) || null;
+    return {
+      name: (u && u.fullName) || 'میلاد رضایی',
+      role: (u && u.roleName) || 'مدیر سیستم',
+      initials: (u && u.initials) || 'م‌ر'
+    };
+  }
+
   /* ---------- Nav definition ---------- */
   const NAV = [
     { section: 'اصلی', items: [
@@ -120,10 +131,10 @@
       <nav class="sidebar__nav" id="sidebarNav">${navHtml}</nav>
       <div class="sidebar__foot">
         <div class="user-chip" id="userChip">
-          <div class="avatar online">م‌ر</div>
+          <div class="avatar online">${displayUser().initials}</div>
           <div class="user-chip__info">
-            <strong>میلاد رضایی</strong>
-            <span>مدیر سیستم</span>
+            <strong>${displayUser().name}</strong>
+            <span>${displayUser().role}</span>
           </div>
           <button class="icon-btn btn-sm" title="خروج" id="logoutBtn">${Icon('logout', 18)}</button>
         </div>
@@ -158,16 +169,16 @@
         <!-- User menu (dropdown) -->
         <div class="dropdown" id="userDropdown">
           <button class="user-chip hide-mobile" data-dropdown style="width:auto;">
-            <div class="avatar online avatar-sm">م‌ر</div>
+            <div class="avatar online avatar-sm">${displayUser().initials}</div>
             <div class="user-chip__info">
-              <strong>میلاد رضایی</strong>
-              <span>مدیر سیستم</span>
+              <strong>${displayUser().name}</strong>
+              <span>${displayUser().role}</span>
             </div>
             ${Icon('chevron-down', 16)}
           </button>
           <!-- compact avatar trigger for mobile -->
           <button class="icon-btn show-tablet" data-dropdown data-tooltip="حساب کاربری">
-            <div class="avatar avatar-sm">م‌ر</div>
+            <div class="avatar avatar-sm">${displayUser().initials}</div>
           </button>
           <div class="dropdown__menu align-end">
             <div class="dropdown__label">حساب کاربری</div>
@@ -431,8 +442,9 @@
       if (e.key === 'Escape') { searchPanel?.classList.remove('is-open'); notif?.classList.remove('is-open'); }
     });
 
-    // Logout — detect whether we're in /pages/ or root
+    // Logout — clears the JWT/user session (once it exists) and returns to login.
     const doLogout = () => {
+      if (window.NovexaAuth) { NovexaAuth.logout(); return; }
       const inPages = location.pathname.includes('/pages/');
       location.href = (inPages ? '../' : '') + 'index.html';
     };

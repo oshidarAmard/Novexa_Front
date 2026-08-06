@@ -31,7 +31,7 @@
   if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
 
   // core scripts (loaded in sequence, dispatch event when ready)
-  const scripts = ['icons.js','data.js','charts.js'];
+  const scripts = ['icons.js','data.js','charts.js','api/config.js','api/http.js','api/auth.js','api/auth-guard.js','api/services.js'];
   function loadScript(name, cb) {
     const s = document.createElement('script');
     s.src = root + 'assets/js/' + name;
