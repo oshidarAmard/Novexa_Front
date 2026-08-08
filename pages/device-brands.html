@@ -28,21 +28,29 @@
     <div class="modal modal--sm">
       <div class="modal__header"><div class="modal__title"><i data-icon="cpu" data-size="20"></i> برند دستگاه جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
-        <div class="field"><label class="field-label">نام برند <span class="req">*</span></label><input class="input" placeholder="مثال: iPhone"></div>
+        <div class="field"><label class="field-label">نام برند <span class="req">*</span></label><input class="input" id="devBrandNameInput" placeholder="مثال: iPhone"></div>
         <div class="field"><label class="field-label">شرکت سازنده</label><input class="input" placeholder="Apple Inc."></div>
         <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea"></textarea></div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'برند دستگاه ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="devBrandCreateBtn"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
     </div>
   </div>
 </div>
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
-  function build(){
+  async function build(){
     if(!window.NOVEXA||!window.UI)return;
+    // Data source: GET /api/DeviceBrands. Backend only guarantees { id, name } —
+    // maker/models/warranty aren't modeled server-side yet, so those show placeholder
+    // defaults until the backend DTO grows them. Falls back to mock data on API failure.
+    let apiRows = null;
+    try { apiRows = await NovexaApi.DeviceBrands.list(); }
+    catch (err) { UI.toast({type:'danger',title:'خطا در دریافت برندهای دستگاه',message:(err&&err.message)||'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.'}); }
     const el=document.getElementById('tbl'); el.className='table-card';
-    const data=NOVEXA.DEVICE_BRANDS.map((b,i)=>({id:i+1,name:b,maker:NOVEXA.pick(['Apple','Samsung','Xiaomi','Huawei','Sony','Google','Microsoft','Lenovo','HP','Asus']),models:Math.floor(3+Math.random()*24),warranty:Math.random()>0.2?'1 سال':'۶ ماه'}));
+    const data = Array.isArray(apiRows)
+      ? apiRows.map(b=>({id:b.id,name:b.name,maker:b.maker||'—',models:b.models??0,warranty:b.warranty||'—'}))
+      : NOVEXA.DEVICE_BRANDS.map((b,i)=>({id:i+1,name:b,maker:NOVEXA.pick(['Apple','Samsung','Xiaomi','Huawei','Sony','Google','Microsoft','Lenovo','HP','Asus']),models:Math.floor(3+Math.random()*24),warranty:Math.random()>0.2?'1 سال':'۶ ماه'}));
     UI.Table.create(el,{
       data,pageSize:10,searchPlaceholder:'جستجوی برند دستگاه...',createText:'برند جدید',createHref:'#',
       columns:[
@@ -55,6 +63,26 @@
     });
   }
   if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+
+  document.getElementById('devBrandCreateBtn').addEventListener('click', async () => {
+    const nameEl = document.getElementById('devBrandNameInput');
+    const name = (nameEl.value || '').trim();
+    if (!name) { nameEl.classList.add('is-invalid'); UI.toast({type:'danger',title:'خطای اعتبارسنجی',message:'نام برند الزامی است.'}); return; }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('devBrandCreateBtn');
+    btn.classList.add('is-loading');
+    try {
+      await NovexaApi.DeviceBrands.create({ name });
+      UI.toast({type:'success',title:'افزوده شد',message:'برند دستگاه ایجاد شد.'});
+      UI.Modal.close('m');
+      nameEl.value = '';
+      build();
+    } catch (err) {
+      UI.toast({type:'danger',title:'خطا در ایجاد برند',message:(err&&err.message)||'عملیات ناموفق بود.'});
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
 </script>
 </body>
 </html>

@@ -36,33 +36,47 @@
     <div class="modal">
       <div class="modal__header"><div class="modal__title"><i data-icon="warehouse" data-size="20"></i> انبار جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
-        <div class="field"><label class="field-label">نام انبار <span class="req">*</span></label><input class="input" placeholder="مثال: انبار کرج"></div>
+        <div class="field"><label class="field-label">نام انبار <span class="req">*</span></label><input class="input" id="whNameInput" placeholder="مثال: انبار کرج"></div>
         <div class="form-grid">
           <div class="field"><label class="field-label">شهر</label><select class="select"><option>تهران</option><option>کرج</option><option>مشهد</option></select></div>
           <div class="field"><label class="field-label">مدیر انبار</label><input class="input" placeholder="نام کاربر"></div>
         </div>
         <div class="form-grid">
           <div class="field"><label class="field-label">ظرفیت</label><input class="input" type="number" placeholder="۵۰۰۰"></div>
-          <div class="field"><label class="field-label">کد انبار</label><input class="input" placeholder="W-07"></div>
+          <div class="field"><label class="field-label">کد انبار</label><input class="input" id="whCodeInput" placeholder="W-07"></div>
         </div>
-        <div class="field"><label class="field-label">آدرس</label><textarea class="textarea" placeholder="آدرس کامل..."></textarea></div>
+        <div class="field"><label class="field-label">آدرس</label><textarea class="textarea" id="whDescInput" placeholder="آدرس کامل..."></textarea></div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'ایجاد شد',message:'انبار جدید ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد انبار</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="whCreateBtn"><i data-icon="check" data-size="16"></i> ایجاد انبار</button></div>
     </div>
   </div>
 </div>
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
-  function build(){
+  async function build(){
     if(!window.NOVEXA||!window.UI)return;
+
+    // Data source: GET /api/Warehouses (api/services.js → NovexaApi.Warehouses.list()).
+    // Backend only guarantees { id, code, name, description, isActive } — city/manager/
+    // capacity/used/items/value aren't modeled server-side yet, so those show placeholder
+    // defaults until the backend DTO is extended. Falls back to mock data on API failure.
+    let apiRows = null;
+    try { apiRows = await NovexaApi.Warehouses.list(); }
+    catch (err) { UI.toast({type:'danger',title:'خطا در دریافت انبارها',message:(err&&err.message)||'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.'}); }
+    const rows = (Array.isArray(apiRows) ? apiRows : NOVEXA.WAREHOUSES).map(w => ({
+      id: w.id, name: w.name, city: w.city || '—', manager: w.manager || '—',
+      capacity: w.capacity ?? 0, used: w.used ?? 0, items: w.items ?? 0, value: w.value ?? 0,
+      status: w.status || (w.isActive === false ? 'inactive' : 'active')
+    }));
+
     // Warehouse cards
     const cards=document.getElementById('whCards');
-    cards.innerHTML=NOVEXA.WAREHOUSES.map(w=>{
-      const pct=Math.round((w.used/w.capacity)*100);
+    cards.innerHTML=rows.map(w=>{
+      const pct=w.capacity ? Math.round((w.used/w.capacity)*100) : 0;
       const cls=pct>85?'danger':(pct>60?'warning':'success');
       const statusMap={active:{l:'فعال',c:'success'},full:{l:'پر',c:'warning'},low:{l:'کم',c:'info'},inactive:{l:'غیرفعال',c:'neutral'}};
-      const st=statusMap[w.status];
+      const st=statusMap[w.status]||statusMap.active;
       return `<div class="card is-clickable">
         <div class="card__body">
           <div class="flex justify-between items-start">
@@ -86,7 +100,7 @@
     // table
     const el=document.getElementById('tbl'); el.className='table-card';
     UI.Table.create(el,{
-      data:NOVEXA.WAREHOUSES.map(w=>({...w,pct:Math.round((w.used/w.capacity)*100)})),
+      data:rows.map(w=>({...w,pct: w.capacity ? Math.round((w.used/w.capacity)*100) : 0})),
       pageSize:10,searchPlaceholder:'جستجوی انبار...',createText:'انبار جدید',createHref:'#',
       columns:[
         {key:'name',label:'نام انبار',type:'custom',render:(v,r)=>`<div style="display:flex;align-items:center;gap:12px;"><span class="avatar avatar-sm" style="background:var(--color-primary-50);color:var(--color-primary)"><i data-icon="warehouse" data-size="16"></i></span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.id}</div></div></div>`},
@@ -101,6 +115,30 @@
     });
   }
   if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+
+  document.getElementById('whCreateBtn').addEventListener('click', async () => {
+    const nameEl = document.getElementById('whNameInput');
+    const name = (nameEl.value || '').trim();
+    if (!name) { nameEl.classList.add('is-invalid'); UI.toast({type:'danger',title:'خطای اعتبارسنجی',message:'نام انبار الزامی است.'}); return; }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('whCreateBtn');
+    btn.classList.add('is-loading');
+    try {
+      await NovexaApi.Warehouses.create({
+        name,
+        code: document.getElementById('whCodeInput').value || undefined,
+        description: document.getElementById('whDescInput').value || undefined
+      });
+      UI.toast({type:'success',title:'ایجاد شد',message:'انبار جدید ایجاد شد.'});
+      UI.Modal.close('m');
+      nameEl.value = '';
+      build();
+    } catch (err) {
+      UI.toast({type:'danger',title:'خطا در ایجاد انبار',message:(err&&err.message)||'عملیات ناموفق بود.'});
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
 </script>
 </body>
 </html>

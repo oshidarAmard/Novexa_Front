@@ -28,40 +28,96 @@
     <div class="stat"><div class="stat__icon danger"><i data-icon="wallet"></i></div><div><div class="stat__label">بدهی به تأمین‌کنندگان</div><div class="stat__value">۸۴۰م‌ت</div></div></div>
   </div>
 
-  <div class="table-card" data-table='{"dataSource":"suppliers","pageSize":10,"searchPlaceholder":"جستجوی نام، کد، شهر...","filters":true,"columns":[
-    {"key":"name","label":"تأمین‌کننده","type":"custom","render":(v,r)=>`<div style="display:flex;align-items:center;gap:10px;"><span class="avatar avatar-sm" style="background:var(--color-primary-50);color:var(--color-primary)">${NOVEXA.initials(v)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code}</div></div></div>`},
-    {"key":"contact","label":"شخص رابط","width":"140px"},
-    {"key":"city","label":"شهر","width":"110px"},
-    {"key":"category","label":"حوزه فعالیت","width":"150px"},
-    {"key":"rating","label":"امتیاز","type":"custom","width":"120px","render":(v)=>`<div style="display:flex;align-items:center;gap:4px;color:var(--warning);"><i data-icon="star" data-size="14"></i><b style="color:var(--text);">${NOVEXA.toFa(v)}</b></div>`},
-    {"key":"payable","label":"بدهی","type":"money","width":"150px","sortable":true},
-    {"key":"status","label":"وضعیت","type":"badge","width":"120px","badges":{"active":{"label":"فعال","cls":"success"},"inactive":{"label":"غیرفعال","cls":"neutral"}}},
-    {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"]}
-  ]}'></div>
+  <div class="table-card" id="supTable"></div>
 
   <div class="modal-backdrop" id="m">
     <div class="modal modal--lg">
       <div class="modal__header"><div class="modal__title"><i data-icon="truck" data-size="20"></i> تأمین‌کننده جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
         <div class="form-grid cols-3">
-          <div class="field"><label class="field-label">نام شرکت <span class="req">*</span></label><input class="input" placeholder="نام شرکت"></div>
+          <div class="field"><label class="field-label">نام شرکت <span class="req">*</span></label><input class="input" id="supNameInput" placeholder="نام شرکت"></div>
           <div class="field"><label class="field-label">کد</label><input class="input" value="S-۸۲۵" readonly style="background:var(--surface-2);"></div>
-          <div class="field"><label class="field-label">کد اقتصادی</label><input class="input" placeholder="کد اقتصادی"></div>
-          <div class="field"><label class="field-label">شخص رابط</label><input class="input" placeholder="نام رابط"></div>
-          <div class="field"><label class="field-label">تلفن ثابت</label><input class="input" placeholder="۰۲۱-..."></div>
-          <div class="field"><label class="field-label">تلفن همراه</label><input class="input" placeholder="۰۹۱۲-..."></div>
+          <div class="field"><label class="field-label">کد اقتصادی</label><input class="input" id="supEconomicInput" placeholder="کد اقتصادی"></div>
+          <div class="field"><label class="field-label">شخص رابط</label><input class="input" id="supContactInput" placeholder="نام رابط"></div>
+          <div class="field"><label class="field-label">تلفن ثابت</label><input class="input" id="supPhoneInput" placeholder="۰۲۱-..."></div>
+          <div class="field"><label class="field-label">تلفن همراه</label><input class="input" id="supMobileInput" placeholder="۰۹۱۲-..."></div>
         </div>
         <div class="form-grid">
-          <div class="field"><label class="field-label">شهر</label><select class="select"><option>تهران</option><option>مشهد</option></select></div>
+          <div class="field"><label class="field-label">شهر</label><select class="select" id="supCitySelect"><option>تهران</option><option>مشهد</option></select></div>
           <div class="field"><label class="field-label">حوزه فعالیت</label><select class="select"><option>کالای دیجیتال</option><option>لوازم خانگی</option></select></div>
         </div>
-        <div class="field"><label class="field-label">آدرس</label><textarea class="textarea"></textarea></div>
+        <div class="field"><label class="field-label">آدرس</label><textarea class="textarea" id="supAddressInput"></textarea></div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'تأمین‌کننده ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="supCreateBtn"><i data-icon="check" data-size="16"></i> ثبت</button></div>
     </div>
   </div>
 </div>
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
+<script>
+  // Data source: GET /api/Suppliers (api/services.js → NovexaApi.Suppliers.list()).
+  // Backend guarantees code/companyName/contactPerson/phone/mobile/city/address etc, but not
+  // rating/payable/status(free-text) — those show placeholder defaults until the backend
+  // DTO grows them. Falls back to mock data on API failure so the page never breaks.
+  async function buildSuppliers() {
+    if (!window.NOVEXA || !window.UI) return;
+    let apiRows = null;
+    try { apiRows = await NovexaApi.Suppliers.list(); }
+    catch (err) { UI.toast({type:'danger',title:'خطا در دریافت تأمین‌کنندگان',message:(err&&err.message)||'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.'}); }
+    const data = (Array.isArray(apiRows) ? apiRows : NOVEXA.suppliers).map(s => ({
+      id: s.id,
+      name: s.companyName || s.name,
+      code: s.code,
+      contact: s.contactPerson || s.contact || '—',
+      city: s.city || '—',
+      category: s.category || '—',
+      rating: s.rating ?? 0,
+      payable: s.payable ?? 0,
+      status: s.status || (s.isActive === false ? 'inactive' : 'active')
+    }));
+    UI.Table.create(document.getElementById('supTable'), {
+      data, pageSize:10, searchPlaceholder:'جستجوی نام، کد، شهر...', filters:true,
+      columns:[
+        {key:'name',label:'تأمین‌کننده',type:'custom',render:(v,r)=>`<div style="display:flex;align-items:center;gap:10px;"><span class="avatar avatar-sm" style="background:var(--color-primary-50);color:var(--color-primary)">${NOVEXA.initials(v)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code||''}</div></div></div>`},
+        {key:'contact',label:'شخص رابط',width:'140px'},
+        {key:'city',label:'شهر',width:'110px'},
+        {key:'category',label:'حوزه فعالیت',width:'150px'},
+        {key:'rating',label:'امتیاز',type:'custom',width:'120px',render:(v)=>`<div style="display:flex;align-items:center;gap:4px;color:var(--warning);"><i data-icon="star" data-size="14"></i><b style="color:var(--text);">${NOVEXA.toFa(v)}</b></div>`},
+        {key:'payable',label:'بدهی',type:'money',width:'150px',sortable:true},
+        {key:'status',label:'وضعیت',type:'badge',width:'120px',badges:{active:{label:'فعال',cls:'success'},inactive:{label:'غیرفعال',cls:'neutral'}}},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if (window.NOVEXA && window.UI) buildSuppliers(); else window.addEventListener('novexa:core-ready', () => setTimeout(buildSuppliers, 100));
+
+  document.getElementById('supCreateBtn').addEventListener('click', async () => {
+    const nameEl = document.getElementById('supNameInput');
+    const companyName = (nameEl.value || '').trim();
+    if (!companyName) { nameEl.classList.add('is-invalid'); UI.toast({type:'danger',title:'خطای اعتبارسنجی',message:'نام شرکت الزامی است.'}); return; }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('supCreateBtn');
+    btn.classList.add('is-loading');
+    try {
+      await NovexaApi.Suppliers.create({
+        companyName,
+        economicCode: document.getElementById('supEconomicInput').value || undefined,
+        contactPerson: document.getElementById('supContactInput').value || undefined,
+        phone: document.getElementById('supPhoneInput').value || undefined,
+        mobile: document.getElementById('supMobileInput').value || undefined,
+        city: document.getElementById('supCitySelect').value || undefined,
+        address: document.getElementById('supAddressInput').value || undefined
+      });
+      UI.toast({type:'success',title:'افزوده شد',message:'تأمین‌کننده ثبت شد.'});
+      UI.Modal.close('m');
+      nameEl.value = '';
+      buildSuppliers();
+    } catch (err) {
+      UI.toast({type:'danger',title:'خطا در ثبت تأمین‌کننده',message:(err&&err.message)||'عملیات ناموفق بود.'});
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
+</script>
 </body>
 </html>

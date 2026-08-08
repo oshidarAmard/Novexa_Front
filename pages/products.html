@@ -38,9 +38,9 @@
   <div class="card">
     <div class="card__body" style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
       <span class="text-sm text-muted">فیلتر سریع:</span>
-      <button class="pill is-active">همه (۱۲۸)</button>
-      <button class="pill">فعال (۱۱۴)</button>
-      <button class="pill">غیرفعال (۱۴)</button>
+      <button class="pill is-active" data-active-filter="">همه (۱۲۸)</button>
+      <button class="pill" data-active-filter="true">فعال (۱۱۴)</button>
+      <button class="pill" data-active-filter="false">غیرفعال (۱۴)</button>
       <button class="pill">موجودی کم (۱۴)</button>
       <button class="pill">پرفروش (۲۴)</button>
       <div style="flex:1"></div>
@@ -50,24 +50,7 @@
 
   <!-- Table view -->
   <div id="tableView">
-    <div class="table-card" data-table='{
-      "dataSource":"products",
-      "pageSize":10,
-      "searchPlaceholder":"جستجوی محصول، کد، برند...",
-      "createText":"محصول جدید",
-      "createHref":"product-create.html",
-      "filters":true,
-      "columns":[
-        {"key":"name","label":"نام محصول","type":"product","sortable":true},
-        {"key":"sku","label":"کد کالا","type":"id","width":"120px"},
-        {"key":"category","label":"دسته‌بندی","width":"150px"},
-        {"key":"unit","label":"واحد","width":"100px"},
-        {"key":"price","label":"قیمت فروش","type":"money","width":"160px","sortable":true},
-        {"key":"stock","label":"موجودی","type":"num","width":"100px","sortable":true},
-        {"key":"status","label":"وضعیت","type":"badge","width":"130px","badges":{"active":{"label":"فعال","cls":"success"},"low":{"label":"موجودی کم","cls":"warning"},"over":{"label":"موجودی مازاد","cls":"info"},"inactive":{"label":"غیرفعال","cls":"neutral"}}},
-        {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"],"actionHrefs":{"view":"product-detail.html","edit":"product-create.html"}}
-      ]
-    }'></div>
+    <div class="table-card" id="productsTable"></div>
   </div>
 
   <!-- Grid view (hidden) -->
@@ -151,6 +134,88 @@
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
+  // Data source: GET /api/Products/search (see api/services.js → NovexaApi.Products.search()).
+  // The backend's SearchProductResponse only guarantees
+  // { id, code, name, categoryName, brandName, isActive, createdDate } — it does not (yet)
+  // expose unit/price/stock/sales-rank, so those columns show a placeholder ('—') until the
+  // backend DTO is extended. Falls back to NOVEXA mock data if the API call fails, so the
+  // page never breaks while the backend is offline.
+  let productActiveFilter; // undefined = all, true/false = IsActive filter
+  let productTableState = null;
+  let lastProductRows = []; // kept for the grid view, so it mirrors whatever the table just loaded
+
+  function mapProductRow(p) {
+    return {
+      id: p.id,
+      name: p.name,
+      sku: p.code,
+      category: p.categoryName || '—',
+      unit: p.unitName || '—',
+      brand: p.brandName || '—',
+      price: p.price ?? null,
+      stock: p.stock ?? null,
+      status: p.isActive === false ? 'inactive' : 'active'
+    };
+  }
+
+  async function fetchProducts(state) {
+    const filters = {
+      Name: state.search || undefined,
+      SortBy: state.sortKey || undefined,
+      IsDescending: state.sortDir === 'desc',
+      Page: state.page,
+      PageSize: state.pageSize,
+      IsActive: productActiveFilter
+    };
+    let res;
+    try {
+      res = await NovexaApi.Products.search(filters);
+    } catch (err) {
+      UI.toast({ type: 'danger', title: 'خطا در دریافت محصولات', message: (err && err.message) || 'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.' });
+      const mock = (window.NOVEXA && NOVEXA.products) || [];
+      lastProductRows = mock.map(p => ({ id:p.id, name:p.name, sku:p.sku, category:p.category, unit:p.unit||'—', brand:p.brand, price:p.price, stock:p.stock, status:p.status }));
+      return { items: lastProductRows, total: lastProductRows.length };
+    }
+    const items = (res.items || []).map(mapProductRow);
+    lastProductRows = items;
+    return { items, total: res.totalCount ?? items.length };
+  }
+
+  function buildProductsTable() {
+    if (!window.UI) return;
+    productTableState = UI.Table.create(document.getElementById('productsTable'), {
+      pageSize: 10,
+      searchPlaceholder: 'جستجوی محصول، کد، برند...',
+      createText: 'محصول جدید',
+      createHref: 'product-create.html',
+      filters: true,
+      fetchData: fetchProducts,
+      columns: [
+        { key:'name', label:'نام محصول', type:'product', sortable:true },
+        { key:'sku', label:'کد کالا', type:'id', width:'120px' },
+        { key:'category', label:'دسته‌بندی', width:'150px' },
+        { key:'unit', label:'واحد', width:'100px' },
+        { key:'price', label:'قیمت فروش', type:'money', width:'160px', sortable:true },
+        { key:'stock', label:'موجودی', type:'num', width:'100px', sortable:true },
+        { key:'status', label:'وضعیت', type:'badge', width:'130px', badges:{ active:{label:'فعال',cls:'success'}, low:{label:'موجودی کم',cls:'warning'}, over:{label:'موجودی مازاد',cls:'info'}, inactive:{label:'غیرفعال',cls:'neutral'} } },
+        { key:'actions', label:'', type:'actions', width:'130px', actions:['view','edit','delete'], actionHrefs:{ view:'product-detail.html', edit:'product-create.html' } }
+      ]
+    });
+  }
+  if (window.NOVEXA && window.UI) buildProductsTable();
+  else window.addEventListener('novexa:core-ready', buildProductsTable);
+
+  // Quick-filter pills → real IsActive filter on the search endpoint (previously decorative/inert).
+  document.querySelectorAll('[data-active-filter]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.card__body .pill').forEach(p => p.classList.remove('is-active'));
+      btn.classList.add('is-active');
+      const v = btn.getAttribute('data-active-filter');
+      productActiveFilter = v === '' ? undefined : v === 'true';
+      if (productTableState) { productTableState.page = 1; UI.Table.refresh(productTableState); }
+    });
+  });
+
   // Wire the filter button to open drawer
   document.addEventListener('click', (e) => {
     if (e.target.closest('[data-filters]')) {
@@ -163,33 +228,31 @@
     UI.toast({ type:'success', title:'حذف شد', message:'محصول با موفقیت حذف شد.' });
   });
 
-  // Grid view builder
+  // Grid view builder — mirrors whichever rows the table last loaded from the API.
   function buildGrid() {
     const view = document.getElementById('gridView');
-    if (!window.NOVEXA) return;
-    view.innerHTML = NOVEXA.products.slice(0,12).map(p => `
+    const rows = lastProductRows.length ? lastProductRows : ((window.NOVEXA && NOVEXA.products) || []);
+    view.innerHTML = rows.slice(0, 12).map(p => `
       <div class="card is-clickable" onclick="location.href='product-detail.html'">
         <div style="height:140px;background:linear-gradient(135deg,var(--color-primary-50),var(--surface-2));display:grid;place-items:center;">
           <i data-icon="box" data-size="48" style="color:var(--color-primary);opacity:.5;"></i>
         </div>
         <div class="card__body">
           <div class="flex justify-between items-start gap-2">
-            <span class="badge badge-${p.status==='low'?'warning':'success'}">${p.status==='low'?'کم':'فعال'}</span>
-            <span class="cell-id">${p.sku}</span>
+            <span class="badge badge-${p.status==='low'?'warning':(p.status==='inactive'?'neutral':'success')}">${p.status==='low'?'کم':(p.status==='inactive'?'غیرفعال':'فعال')}</span>
+            <span class="cell-id">${p.sku||''}</span>
           </div>
           <h4 style="margin-top:8px;font-size:14px;line-height:1.5;">${p.name}</h4>
-          <div class="text-xs text-muted mt-2">${p.brand} • ${p.category}</div>
+          <div class="text-xs text-muted mt-2">${p.brand||''} ${p.brand&&p.category?'•':''} ${p.category||''}</div>
           <div class="divider"></div>
           <div class="flex justify-between items-center">
-            <div><div class="text-xs text-muted">قیمت</div><div class="cell-money">${NOVEXA.faMoney(p.price)}<span class="currency">ت</span></div></div>
-            <div class="text-end"><div class="text-xs text-muted">موجودی</div><div class="num fw-600">${NOVEXA.toFa(p.stock)}</div></div>
+            <div><div class="text-xs text-muted">قیمت</div><div class="cell-money">${p.price!=null && window.NOVEXA ? NOVEXA.faMoney(p.price) : '—'}<span class="currency">${p.price!=null?'ت':''}</span></div></div>
+            <div class="text-end"><div class="text-xs text-muted">موجودی</div><div class="num fw-600">${p.stock!=null && window.NOVEXA ? NOVEXA.toFa(p.stock) : '—'}</div></div>
           </div>
         </div>
       </div>`).join('');
     renderIcons(view);
   }
-  if (window.NOVEXA) buildGrid();
-  else window.addEventListener('novexa:core-ready', buildGrid);
 
   // View toggle
   document.querySelectorAll('[data-view]').forEach(b => {

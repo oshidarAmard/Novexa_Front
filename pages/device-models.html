@@ -23,7 +23,7 @@
     <div class="modal">
       <div class="modal__header"><div class="modal__title"><i data-icon="cpu" data-size="20"></i> مدل دستگاه جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
-        <div class="field"><label class="field-label">نام مدل <span class="req">*</span></label><input class="input" placeholder="مثال: Galaxy S24 Ultra"></div>
+        <div class="field"><label class="field-label">نام مدل <span class="req">*</span></label><input class="input" id="devModelNameInput" placeholder="مثال: Galaxy S24 Ultra"></div>
         <div class="form-grid">
           <div class="field"><label class="field-label">برند دستگاه</label><select class="select"><option>iPhone</option><option>Galaxy</option><option>Redmi</option></select></div>
           <div class="field"><label class="field-label">کد مدل</label><input class="input" placeholder="SM-S928B"></div>
@@ -33,17 +33,25 @@
           <div class="field"><label class="field-label">مدت گارانتی</label><select class="select"><option>۱ سال</option><option>۲ سال</option><option>۶ ماه</option></select></div>
         </div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'مدل دستگاه ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="devModelCreateBtn"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
     </div>
   </div>
 </div>
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
-  function build(){
+  async function build(){
     if(!window.NOVEXA||!window.UI)return;
+    // Data source: GET /api/DeviceModels. Backend only guarantees { id, name } — brand/
+    // code/year/warranty/units aren't modeled server-side yet, so those show placeholder
+    // defaults until the backend DTO grows them. Falls back to mock data on API failure.
+    let apiRows = null;
+    try { apiRows = await NovexaApi.DeviceModels.list(); }
+    catch (err) { UI.toast({type:'danger',title:'خطا در دریافت مدل‌های دستگاه',message:(err&&err.message)||'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.'}); }
     const el=document.getElementById('tbl'); el.className='table-card';
-    const data=NOVEXA.DEVICE_MODELS.map((m,i)=>({id:i+1,name:m,brand:NOVEXA.pick(NOVEXA.DEVICE_BRANDS),code:'SM-'+NOVEXA.toFa(100+i),year:'۱۴۰۳',warranty:NOVEXA.pick(['۱ سال','۲ سال']),units:Math.floor(5+Math.random()*400)}));
+    const data = Array.isArray(apiRows)
+      ? apiRows.map(m=>({id:m.id,name:m.name,brand:m.brand||'—',code:m.code||'—',year:m.year||'—',warranty:m.warranty||'—',units:m.units??0}))
+      : NOVEXA.DEVICE_MODELS.map((m,i)=>({id:i+1,name:m,brand:NOVEXA.pick(NOVEXA.DEVICE_BRANDS),code:'SM-'+NOVEXA.toFa(100+i),year:'۱۴۰۳',warranty:NOVEXA.pick(['۱ سال','۲ سال']),units:Math.floor(5+Math.random()*400)}));
     UI.Table.create(el,{
       data,pageSize:10,searchPlaceholder:'جستجوی مدل...',createText:'مدل جدید',createHref:'#',
       columns:[
@@ -57,6 +65,26 @@
     });
   }
   if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+
+  document.getElementById('devModelCreateBtn').addEventListener('click', async () => {
+    const nameEl = document.getElementById('devModelNameInput');
+    const name = (nameEl.value || '').trim();
+    if (!name) { nameEl.classList.add('is-invalid'); UI.toast({type:'danger',title:'خطای اعتبارسنجی',message:'نام مدل الزامی است.'}); return; }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('devModelCreateBtn');
+    btn.classList.add('is-loading');
+    try {
+      await NovexaApi.DeviceModels.create({ name });
+      UI.toast({type:'success',title:'افزوده شد',message:'مدل دستگاه ایجاد شد.'});
+      UI.Modal.close('m');
+      nameEl.value = '';
+      build();
+    } catch (err) {
+      UI.toast({type:'danger',title:'خطا در ایجاد مدل',message:(err&&err.message)||'عملیات ناموفق بود.'});
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
 </script>
 </body>
 </html>

@@ -33,15 +33,7 @@
   </div>
 
   <div id="tableView">
-    <div class="table-card" data-table='{"dataSource":"customers","pageSize":10,"searchPlaceholder":"جستجوی نام، کد، تلفن...","filters":true,"columns":[
-      {"key":"name","label":"مشتری","type":"custom","render":(v,r)=>`<div style="display:flex;align-items:center;gap:10px;"><span class="avatar avatar-sm">${NOVEXA.initials(v)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code} • ${r.type}</div></div></div>`},
-      {"key":"phone","label":"تلفن"},
-      {"key":"city","label":"شهر","width":"110px"},
-      {"key":"orders","label":"سفارشات","type":"num","width":"100px","sortable":true},
-      {"key":"balance","label":"مانده حساب","type":"money","width":"170px","sortable":true},
-      {"key":"status","label":"وضعیت","type":"badge","width":"120px","badges":{"active":{"label":"فعال","cls":"success"},"inactive":{"label":"غیرفعال","cls":"neutral"}}},
-      {"key":"actions","label":"","type":"actions","width":"130px","actions":["view","edit","delete"]}
-    ]}'></div>
+    <div class="table-card" id="custTable"></div>
   </div>
 
   <div id="gridView" class="hidden"></div>
@@ -51,38 +43,83 @@
       <div class="modal__header"><div class="modal__title"><i data-icon="user" data-size="20"></i> مشتری جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
         <div class="form-grid cols-3">
-          <div class="field"><label class="field-label">نوع مشتری</label><div class="segment"><button class="is-active">حقیقی</button><button>حقوقی</button></div></div>
-          <div class="field"><label class="field-label">نام <span class="req">*</span></label><input class="input" placeholder="نام و نام خانوادگی"></div>
+          <div class="field"><label class="field-label">نوع مشتری</label><div class="segment" id="custTypeSegment"><button class="is-active" data-type="0">حقیقی</button><button data-type="1">حقوقی</button></div></div>
+          <div class="field"><label class="field-label">نام <span class="req">*</span></label><input class="input" id="custNameInput" placeholder="نام و نام خانوادگی"></div>
           <div class="field"><label class="field-label">کد مشتری</label><input class="input" value="C-۱۲۳۷" readonly style="background:var(--surface-2);"></div>
         </div>
         <div class="form-grid cols-3">
-          <div class="field"><label class="field-label">تلفن همراه <span class="req">*</span></label><div class="input-group"><span class="input-icon" data-icon="phone"></span><input class="input" placeholder="۰۹۱۲..."></div></div>
-          <div class="field"><label class="field-label">ایمیل</label><div class="input-group"><span class="input-icon" data-icon="mail"></span><input class="input" placeholder="name@mail.com"></div></div>
-          <div class="field"><label class="field-label">کد ملی</label><input class="input" placeholder="۰۰۰..."></div>
+          <div class="field"><label class="field-label">تلفن همراه <span class="req">*</span></label><div class="input-group"><span class="input-icon" data-icon="phone"></span><input class="input" id="custMobileInput" placeholder="۰۹۱۲..."></div></div>
+          <div class="field"><label class="field-label">ایمیل</label><div class="input-group"><span class="input-icon" data-icon="mail"></span><input class="input" id="custEmailInput" placeholder="name@mail.com"></div></div>
+          <div class="field"><label class="field-label">کد ملی</label><input class="input" id="custNationalInput" placeholder="۰۰۰..."></div>
         </div>
         <div class="form-grid">
-          <div class="field"><label class="field-label">شهر</label><select class="select"><option>تهران</option><option>مشهد</option><option>اصفهان</option></select></div>
+          <div class="field"><label class="field-label">شهر</label><select class="select" id="custCitySelect"><option>تهران</option><option>مشهد</option><option>اصفهان</option></select></div>
           <div class="field"><label class="field-label">اعتبار خرید</label><div class="input-affixed"><span class="input-prefix">ت</span><input class="input" value="۱۰٬۰۰۰٬۰۰۰"></div></div>
         </div>
-        <div class="field"><label class="field-label">آدرس کامل</label><textarea class="textarea" placeholder="استان، شهر، خیابان، پلاک..."></textarea></div>
+        <div class="field"><label class="field-label">آدرس کامل</label><textarea class="textarea" id="custAddressInput" placeholder="استان، شهر، خیابان، پلاک..."></textarea></div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'مشتری جدید ثبت شد.'})"><i data-icon="check" data-size="16"></i> ثبت مشتری</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="custCreateBtn"><i data-icon="check" data-size="16"></i> ثبت مشتری</button></div>
     </div>
   </div>
 </div>
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
+  // Data source: GET /api/customers (api/services.js → NovexaApi.Customers.list()).
+  // Backend guarantees firstName/lastName/companyName/customerType/phone/mobile/city/
+  // address/creditLimit etc, but not orders/balance/status(free text) — those show
+  // placeholder defaults until the backend DTO grows them. Falls back to mock data on
+  // API failure so the page never breaks.
+  let lastCustomerRows = [];
+
+  function mapCustomerRow(c) {
+    const displayName = c.companyName || [c.firstName, c.lastName].filter(Boolean).join(' ') || c.name || '—';
+    return {
+      id: c.id,
+      name: displayName,
+      code: c.code,
+      type: c.customerType === 1 ? 'حقوقی' : 'حقیقی',
+      phone: c.mobile || c.phone || '—',
+      city: c.city || '—',
+      orders: c.orders ?? 0,
+      balance: c.balance ?? 0,
+      status: c.status || (c.isActive === false ? 'inactive' : 'active')
+    };
+  }
+
+  async function buildCustomersTable() {
+    if (!window.NOVEXA || !window.UI) return;
+    let apiRows = null;
+    try { apiRows = await NovexaApi.Customers.list(); }
+    catch (err) { UI.toast({type:'danger',title:'خطا در دریافت مشتریان',message:(err&&err.message)||'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.'}); }
+    const data = (Array.isArray(apiRows) ? apiRows.map(mapCustomerRow) : NOVEXA.customers);
+    lastCustomerRows = data;
+    UI.Table.create(document.getElementById('custTable'), {
+      data, pageSize:10, searchPlaceholder:'جستجوی نام، کد، تلفن...', filters:true,
+      columns:[
+        {key:'name',label:'مشتری',type:'custom',render:(v,r)=>`<div style="display:flex;align-items:center;gap:10px;"><span class="avatar avatar-sm">${NOVEXA.initials(v)}</span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.code||''} • ${r.type||''}</div></div></div>`},
+        {key:'phone',label:'تلفن'},
+        {key:'city',label:'شهر',width:'110px'},
+        {key:'orders',label:'سفارشات',type:'num',width:'100px',sortable:true},
+        {key:'balance',label:'مانده حساب',type:'money',width:'170px',sortable:true},
+        {key:'status',label:'وضعیت',type:'badge',width:'120px',badges:{active:{label:'فعال',cls:'success'},inactive:{label:'غیرفعال',cls:'neutral'}}},
+        {key:'actions',label:'',type:'actions',width:'130px',actions:['view','edit','delete']}
+      ]
+    });
+  }
+  if (window.NOVEXA && window.UI) buildCustomersTable(); else window.addEventListener('novexa:core-ready', () => setTimeout(buildCustomersTable, 100));
+
   function buildGrid(){
     if(!window.NOVEXA)return;
     const v=document.getElementById('gridView');
     v.style.display='grid'; v.style.gridTemplateColumns='repeat(4,1fr)'; v.style.gap='16px';
-    v.innerHTML=NOVEXA.customers.slice(0,12).map(c=>`
+    const rows = lastCustomerRows.length ? lastCustomerRows : NOVEXA.customers;
+    v.innerHTML=rows.slice(0,12).map(c=>`
       <div class="card is-clickable">
         <div class="card__body" style="text-align:center;">
           <div class="avatar avatar-lg" style="margin:0 auto;">${NOVEXA.initials(c.name)}</div>
           <h4 style="margin-top:12px;font-size:14px;">${c.name}</h4>
-          <div class="text-xs text-muted mt-1">${c.code} • ${c.type}</div>
+          <div class="text-xs text-muted mt-1">${c.code||''} • ${c.type||''}</div>
           <div class="flex justify-center gap-2 mt-2">
             <span class="badge badge-${c.status==='active'?'success':'neutral'}">${c.status==='active'?'فعال':'غیرفعال'}</span>
             <span class="badge badge-info no-dot">${c.city}</span>
@@ -104,6 +141,41 @@
     document.getElementById('gridView').classList.toggle('hidden',v!=='grid');
     if(v==='grid')buildGrid();
   }));
+
+  // TODO(api): CustomerType enum values (0/1/2) aren't labeled in the OpenAPI spec — 0/1
+  // are assumed to be Individual/Company below; confirm with the backend team.
+  document.getElementById('custCreateBtn').addEventListener('click', async () => {
+    const nameEl = document.getElementById('custNameInput');
+    const fullName = (nameEl.value || '').trim();
+    if (!fullName) { nameEl.classList.add('is-invalid'); UI.toast({type:'danger',title:'خطای اعتبارسنجی',message:'نام مشتری الزامی است.'}); return; }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('custCreateBtn');
+    btn.classList.add('is-loading');
+    const customerType = +(document.querySelector('#custTypeSegment .is-active')?.dataset.type || 0);
+    const [firstName, ...rest] = fullName.split(' ');
+    try {
+      await NovexaApi.Customers.create({
+        code: 'C-' + Date.now().toString().slice(-6),
+        customerType,
+        firstName: customerType === 0 ? firstName : undefined,
+        lastName: customerType === 0 ? (rest.join(' ') || undefined) : undefined,
+        companyName: customerType === 1 ? fullName : undefined,
+        mobile: document.getElementById('custMobileInput').value || undefined,
+        email: document.getElementById('custEmailInput').value || undefined,
+        nationalCode: document.getElementById('custNationalInput').value || undefined,
+        city: document.getElementById('custCitySelect').value || undefined,
+        address: document.getElementById('custAddressInput').value || undefined
+      });
+      UI.toast({type:'success',title:'افزوده شد',message:'مشتری جدید ثبت شد.'});
+      UI.Modal.close('m');
+      nameEl.value = '';
+      buildCustomersTable();
+    } catch (err) {
+      UI.toast({type:'danger',title:'خطا در ثبت مشتری',message:(err&&err.message)||'عملیات ناموفق بود.'});
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
 </script>
 </body>
 </html>

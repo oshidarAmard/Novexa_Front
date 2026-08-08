@@ -27,26 +27,34 @@
     <div class="modal modal--sm">
       <div class="modal__header"><div class="modal__title"><i data-icon="layers" data-size="20"></i> واحد جدید</div><button class="icon-btn" data-modal-close><i data-icon="x" data-size="20"></i></button></div>
       <div class="modal__body">
-        <div class="field"><label class="field-label">نام واحد <span class="req">*</span></label><input class="input" placeholder="مثال: متر"></div>
+        <div class="field"><label class="field-label">نام واحد <span class="req">*</span></label><input class="input" id="unitNameInput" placeholder="مثال: متر"></div>
         <div class="form-grid">
           <div class="field"><label class="field-label">نماد</label><input class="input" placeholder="m"></div>
           <div class="field"><label class="field-label">نوع</label><select class="select"><option>عددی</option><option>وزنی</option><option>حجمی</option><option>طول</option></select></div>
         </div>
         <div class="field"><label class="field-label">توضیحات</label><textarea class="textarea"></textarea></div>
       </div>
-      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" data-modal-close onclick="UI.toast({type:'success',title:'افزوده شد',message:'واحد ایجاد شد.'})"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
+      <div class="modal__footer"><button class="btn btn-ghost" data-modal-close>انصراف</button><button class="btn btn-primary" id="unitCreateBtn"><i data-icon="check" data-size="16"></i> ایجاد</button></div>
     </div>
   </div>
 </div>
 <script src="../assets/js/layout.js"></script>
 <script src="../assets/js/components.js"></script>
 <script>
-  function build(){
+  async function build(){
     if(!window.NOVEXA||!window.UI)return;
+    // Data source: GET /api/Units (api/services.js → NovexaApi.Units.list()).
+    // Backend only guarantees { id, name }; symbol/type/products aren't modeled server-side
+    // yet, so they use the same client-side heuristic as before (or a placeholder) until
+    // the backend DTO grows them. Falls back to mock data on API failure.
+    let apiRows = null;
+    try { apiRows = await NovexaApi.Units.list(); }
+    catch (err) { UI.toast({type:'danger',title:'خطا در دریافت واحدها',message:(err&&err.message)||'اتصال به سرور برقرار نشد؛ داده‌های نمونه نمایش داده می‌شود.'}); }
     const el=document.getElementById('tbl'); el.className='table-card';
     const types={عدد:'عددی',کیلوگرم:'وزنی',گرم:'وزنی',لیتر:'حجمی',متر:'طول',جعبه:'عددی',کارتن:'عددی',دستگاه:'عددی',بسته:'عددی',قوطی:'عددی'};
+    const source = Array.isArray(apiRows) ? apiRows : NOVEXA.UNITS;
     UI.Table.create(el,{
-      data:NOVEXA.UNITS.map(u=>({...u,type:types[u.name]||'عددی',products:Math.floor(5+Math.random()*200)})),
+      data:source.map(u=>({id:u.id, name:u.name, symbol:u.symbol||u.name?.slice(0,2)||'—', type:u.type||types[u.name]||'عددی', products:u.products??0})),
       pageSize:10,searchPlaceholder:'جستجوی واحد...',createText:'واحد جدید',createHref:'#',
       columns:[
         {key:'name',label:'نام واحد',type:'custom',render:(v,r)=>`<div style="display:flex;align-items:center;gap:12px;"><span class="avatar avatar-sm" style="background:var(--success-50);color:var(--success)"><i data-icon="layers" data-size="16"></i></span><div><div class="cell-strong">${v}</div><div class="cell-sub">${r.symbol}</div></div></div>`},
@@ -58,6 +66,26 @@
     });
   }
   if(window.NOVEXA&&window.UI)build();else window.addEventListener('novexa:core-ready',()=>setTimeout(build,100));
+
+  document.getElementById('unitCreateBtn')?.addEventListener('click', async () => {
+    const nameEl = document.getElementById('unitNameInput');
+    const name = (nameEl.value || '').trim();
+    if (!name) { nameEl.classList.add('is-invalid'); UI.toast({type:'danger',title:'خطای اعتبارسنجی',message:'نام واحد الزامی است.'}); return; }
+    nameEl.classList.remove('is-invalid');
+    const btn = document.getElementById('unitCreateBtn');
+    btn.classList.add('is-loading');
+    try {
+      await NovexaApi.Units.create({ name });
+      UI.toast({type:'success',title:'افزوده شد',message:'واحد ایجاد شد.'});
+      UI.Modal.close('m');
+      nameEl.value = '';
+      build();
+    } catch (err) {
+      UI.toast({type:'danger',title:'خطا در ایجاد واحد',message:(err&&err.message)||'عملیات ناموفق بود.'});
+    } finally {
+      btn.classList.remove('is-loading');
+    }
+  });
 </script>
 </body>
 </html>
